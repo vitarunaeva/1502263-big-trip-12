@@ -37,9 +37,10 @@ render(tripControlsElement, createTripFiltersTemplate());
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 render(tripEventsElement, createTripSortTemplate());
 
-const sortedEvents = events.filter(getFilterRule(FILTER_TYPE.EVERYTHING)).sort(getSorterRule(SORT_TYPE.EVENT));
+const sortedEvents = events.filter(getFilterRule(FILTER_TYPE.FUTURE)).sort(getSorterRule(SORT_TYPE.EVENT));
 
-render(tripEventsElement, createEditTripEventTemplate(sortedEvents[0], eventDestinations, eventOffers));
+const offersList = eventOffers.find((offer) => offer.eventType === sortedEvents[0].eventType).offers;
+render(tripEventsElement, createEditTripEventTemplate(sortedEvents[0], offersList));
 
 const groupedEvents = splitEventsByDays(sortedEvents);
 

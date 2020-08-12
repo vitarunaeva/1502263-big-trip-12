@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {EVENT_TYPE, MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
+import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
 import {eventTypePostfix} from '../utils/trip.js';
 
 const createEventTypesTemplate = (pointId, specificType) => {
@@ -31,12 +31,12 @@ const createAvailableOffersTemplate = (pointId, offers, selectedOffers) => {
 };
 
 const createOfferItemTemplate = (pointId, offer, isChecked) => {
-  const offerClassName = offer.title.replace(/\s/g, `-`).toLowerCase();
+  const normalizedOfferId = offer.title.replace(/\s/g, `-`).toLowerCase();
 
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerClassName}-${pointId}" type="checkbox" name="event-offer-${offerClassName}" ${isChecked ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${offerClassName}-${pointId}">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${normalizedOfferId}-${pointId}" type="checkbox" name="event-offer-${normalizedOfferId}" ${isChecked ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${normalizedOfferId}-${pointId}">
       <span class="event__offer-title">${offer.title}</span>
       +
       €&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -92,78 +92,65 @@ const createRollupButtonTemplate = (pointId) => {
   </button>`;
 };
 
-export const createEditTripEventTemplate = (eventItem = {}, destinations = [], eventOffers = []) => {
-  const {
-    id = POINT_ID,
-    destination = {name: ``},
-    type = EVENT_TYPE.FLIGHT,
-    price = ``,
-    offers = [],
-    startDate = new Date(),
-    endDate = new Date(),
-    isFavorite = false,
-  } = eventItem;
-
-  const offersList = eventOffers.find((offer) => offer.eventType === type).offers;
-
+export const createEditTripEventTemplate = (eventItem, offersList) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
+          <label class="event__type  event__type-btn" for="event-type-toggle-${eventItem.id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.eventType}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventItem.id}" type="checkbox">
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
-              ${createEventTypesTemplate(id, MOVE_TYPE)}
+              ${createEventTypesTemplate(eventItem.id, MOVE_TYPE)}
             </fieldset>
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
-              ${createEventTypesTemplate(id, ACTIVITY_TYPE)}
+              ${createEventTypesTemplate(eventItem.id, ACTIVITY_TYPE)}
             </fieldset>
           </div>
         </div>
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-${id}">
-            ${type} ${eventTypePostfix(type)}
+          <label class="event__label  event__type-output" for="event-destination-${eventItem.id}">
+            ${eventItem.eventType} ${eventTypePostfix(eventItem.eventType)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
-          <datalist id="destination-list-${id}">
-            ${createDestinationItemsTemplate(destinations)}
+          <input class="event__input  event__input--destination" id="event-destination-${eventItem.id}" type="text" name="event-destination" value="${eventItem.destination.name}" list="destination-list-${eventItem.id}">
+          <datalist id="destination-list-${eventItem.id}">
+            ${createDestinationItemsTemplate(eventItem.offers)}
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-${id}">
+          <label class="visually-hidden" for="event-start-time-${eventItem.id}">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${moment(startDate).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-start-time-${eventItem.id}" type="text" name="event-start-time" value="${moment(eventItem.startDate).format(`DD/MM/YY HH:mm`)}">
           —
-          <label class="visually-hidden" for="event-end-time-${id}">
+          <label class="visually-hidden" for="event-end-time-${eventItem.id}">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${moment(endDate).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-end-time-${eventItem.id}" type="text" name="event-end-time" value="${moment(eventItem.endDate).format(`DD/MM/YY HH:mm`)}">
         </div>
         <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-${id}">
+          <label class="event__label" for="event-price-${eventItem.id}">
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-${eventItem.id}" type="text" name="event-price" value="${eventItem.price}">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        ${createResetButtonTemplate(id)}
-        ${createFavoriteButtonTemplate(id, isFavorite)}
-        ${createRollupButtonTemplate(id)}
+        ${createResetButtonTemplate(eventItem.id)}
+        ${createFavoriteButtonTemplate(eventItem.id, eventItem.isFavorite)}
+        ${createRollupButtonTemplate(eventItem.id)}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
-          ${createAvailableOffersTemplate(id, offersList, offers)}
+          ${createAvailableOffersTemplate(eventItem.id, offersList, eventItem.offers)}
         </section>
         <section class="event__section  event__section--destination">
-          ${createConcreteDestinationTemplate(id, destination)}
+          ${createConcreteDestinationTemplate(eventItem.id, eventItem.destination)}
         </section>
       </section>
     </form>`
