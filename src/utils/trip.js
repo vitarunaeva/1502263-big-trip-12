@@ -32,10 +32,7 @@ export const getFilterRule = (filterType) => {
 };
 
 export const getTotalEventPrice = (event) => {
-  return event.offers.reduce(
-    (offerSum, offer) => offer.price + offerSum,
-    event.price
-  );
+  return event.offers.reduce((offerSum, offer) => offer.price + offerSum, event.price);
 };
 
 export const splitEventsByDays = (sortedEvents) => {
