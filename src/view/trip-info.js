@@ -1,14 +1,68 @@
-export const createTripInfoTemplate = () => {
+import moment from 'moment';
+import {getTotalEventPrice} from '../utils/trip.js';
+import {getSorterRule} from '../utils/trip.js';
+import {SORT_TYPE} from '../const.js';
+
+const createDatesTemplate = (sortedEvents) => {
+  const tripStartDate = sortedEvents[0].startDate;
+  const tripFinishDate = sortedEvents[sortedEvents.length - 1].endDate;
+  const isSameDay = moment(tripStartDate).isSame(tripFinishDate, `day`);
+  const isSameMonth = moment(tripStartDate).isSame(tripFinishDate, `month`);
+
+  let summaryDates = ``;
+
+  if (isSameDay) {
+    summaryDates = moment(tripStartDate).format(`MMM DD`);
+  } else if (isSameMonth) {
+    summaryDates = `${moment(tripStartDate).format(`MMM DD`)}&nbsp;—&nbsp;${moment(tripFinishDate).format(`DD`)}`;
+  } else {
+    summaryDates = `${moment(tripStartDate).format(`MMM DD`)}&nbsp;—&nbsp;${moment(tripFinishDate).format(`MMM DD`)}`;
+  }
+
+  return summaryDates;
+};
+
+const createCitiesTemplate = (sortedEvents) => {
+  let sortedCities = new Set(sortedEvents.map((event) => event.destination.name));
+  let cities = [...sortedCities];
+
+  const summaryPoints = [];
+  summaryPoints.push([...cities][0]);
+
+  switch (cities.length) {
+    case 1:
+      break;
+    case 2:
+      summaryPoints.push(cities[1]);
+      break;
+    default:
+      summaryPoints.push(`...`);
+      summaryPoints.push(cities[cities.length - 1]);
+      break;
+  }
+
+  return summaryPoints.join(`&nbsp;—&nbsp;`);
+};
+
+export const createTripInfoTemplate = (tripEvents) => {
+  if (!tripEvents.length) {
+    return ``;
+  }
+
+  const sortedEvents = tripEvents.slice().sort(getSorterRule(SORT_TYPE.EVENT));
+
+  const cost = tripEvents.reduce((accumulatedSum, event) => accumulatedSum + getTotalEventPrice(event), 0);
+
   return (
     `<section class="trip-main__trip-info  trip-info">
         <div class="trip-info__main">
-            <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+            <h1 class="trip-info__title">${createCitiesTemplate(sortedEvents)}</h1>
 
-            <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+            <p class="trip-info__dates">${createDatesTemplate(sortedEvents)}</p>
         </div>
 
         <p class="trip-info__cost">
-            Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+            Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
         </p>
      </section>`
   );
