@@ -36,3 +36,15 @@ export const FILTER_TYPE = {
   FUTURE: `future`,
   PAST: `past`,
 };
+
+export const newEventItem = {
+  id: POINT_ID,
+  destination: {name: ``},
+  eventType: EVENT_TYPE.FLIGHT,
+  price: ``,
+  offers: [],
+  startDate: new Date(),
+  endDate: new Date(),
+  isFavorite: false,
+};
+

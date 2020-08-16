@@ -9,7 +9,7 @@ import {getTripEvent} from "./mock/destination";
 import {generateOffers} from "./mock/offers";
 import {generateRandomEvent} from "./mock/event";
 import {getSorterRule, splitEventsByDays, getFilterRule} from "./utils/trip.js";
-import {FILTER_TYPE, SORT_TYPE} from "./const";
+import {FILTER_TYPE, SORT_TYPE, newEventItem} from "./const";
 
 const TRIPS_COUNT = 15;
 
@@ -33,20 +33,21 @@ const tripControlsTitle = tripControlsElement.querySelector(`h2`);
 render(tripControlsTitle, createMenuTemplate(), `afterend`);
 render(tripControlsElement, createTripFiltersTemplate());
 
-
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-render(tripEventsElement, createTripSortTemplate());
+render(tripEventsElement, createTripSortTemplate(), `afterbegin`);
 
 const sortedEvents = events.filter(getFilterRule(FILTER_TYPE.FUTURE)).sort(getSorterRule(SORT_TYPE.EVENT));
 
 const offersList = eventOffers.find((offer) => offer.eventType === sortedEvents[0].eventType).offers;
-render(tripEventsElement, createEditTripEventTemplate(sortedEvents[0], offersList));
 
 const groupedEvents = splitEventsByDays(sortedEvents);
+
+const tripDaysElement = tripEventsElement.querySelector(`.trip-days`);
+render(tripDaysElement, createEditTripEventTemplate(newEventItem, offersList));
 
 Object.keys(groupedEvents).forEach((eventDate, dayIndex) => {
   const eventDay = new Date(eventDate);
   const dayId = dayIndex + 1;
-  render(tripEventsElement, createTripDaysTemplate(dayId, eventDay, groupedEvents[eventDate]));
+  render(tripDaysElement, createTripDaysTemplate(dayId, eventDay, groupedEvents[eventDate]));
 });
 
