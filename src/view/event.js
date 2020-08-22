@@ -2,6 +2,7 @@ import moment from 'moment';
 import {eventTypePostfix} from '../utils/trip.js';
 import {humanizeDuration} from '../utils/common.js';
 import {MAX_OFFERS} from '../const';
+import {createElement} from '../utils/render.js';
 
 const createOfferItemTemplate = ({title, price}) => {
   return (
@@ -28,7 +29,7 @@ const createOffersTemplate = (offers) => {
   </ul>`;
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -60,3 +61,26 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class EventPoint {
+  constructor(tripEvent) {
+    this._tripEvent = tripEvent;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._tripEvent);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -48,3 +48,10 @@ export const newEventItem = {
   isFavorite: false,
 };
 
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+  BEFOREBEGIN: `beforebegin`
+};
+
