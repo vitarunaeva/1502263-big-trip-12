@@ -1,11 +1,12 @@
 import moment from 'moment';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
 import {eventTypePostfix} from '../utils/trip.js';
+import {createElement} from '../utils/render.js';
 
 const createEventTypesTemplate = (pointId, specificType) => {
   return Object.values(specificType).map((type) => (
     `<div class="event__type-item">
-        <input id="event-type-${type}-${pointId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
         <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${pointId}">${type}</label>
       </div>`)).join(``);
 };
@@ -92,7 +93,7 @@ const createRollupButtonTemplate = (pointId) => {
   </button>`;
 };
 
-export const createEditTripEventTemplate = (eventItem, offersList) => {
+const createEditTripEventTemplate = (eventItem, offersList) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -156,3 +157,28 @@ export const createEditTripEventTemplate = (eventItem, offersList) => {
     </form>`
   );
 };
+
+export default class EventEditor {
+  constructor(eventItem, tripOffers) {
+    this._eventItem = eventItem;
+    this._offerList = tripOffers;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditTripEventTemplate(this._eventItem, this._offerList);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

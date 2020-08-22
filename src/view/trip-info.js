@@ -2,6 +2,7 @@ import moment from 'moment';
 import {getTotalEventPrice} from '../utils/trip.js';
 import {getSorterRule} from '../utils/trip.js';
 import {SORT_TYPE} from '../const.js';
+import {createElement} from "../utils/render";
 
 const createDatesTemplate = (sortedEvents) => {
   const tripStartDate = sortedEvents[0].startDate;
@@ -44,7 +45,7 @@ const createCitiesTemplate = (sortedEvents) => {
   return summaryPoints.join(`&nbsp;—&nbsp;`);
 };
 
-export const createTripInfoTemplate = (tripEvents) => {
+const createTripInfoTemplate = (tripEvents) => {
   if (!tripEvents.length) {
     return ``;
   }
@@ -67,3 +68,26 @@ export const createTripInfoTemplate = (tripEvents) => {
      </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(tripEvents) {
+    this._tripEvents = tripEvents;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._tripEvents);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

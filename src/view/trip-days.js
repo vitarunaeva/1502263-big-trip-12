@@ -1,11 +1,7 @@
 import moment from 'moment';
-import {createEventTemplate} from './event.js';
+import {createElement} from '../utils/render.js';
 
-const createEventPointsTemplate = (tripEvents) => {
-  return tripEvents.map((event) => createEventTemplate(event)).join(``);
-};
-
-export const createTripDaysTemplate = (dayId, eventDate, tripEvents) => {
+const createTripDaysTemplate = (dayId, eventDate) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
@@ -14,9 +10,31 @@ export const createTripDaysTemplate = (dayId, eventDate, tripEvents) => {
         ${moment(eventDate).format(`MMM DD`)}
        </time>
       </div>
-      <ul class="trip-events__list">
-       ${createEventPointsTemplate(tripEvents)}
-      </ul>
+      <ul class="trip-events__list"></ul>
     </li>`
   );
 };
+
+export default class TripDay {
+  constructor(dayId = null, eventDate = null) {
+    this._dayId = dayId;
+    this._eventDate = eventDate;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripDaysTemplate(this._dayId, this._eventDate);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

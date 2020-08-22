@@ -1,21 +1,18 @@
 import {createElement} from '../utils/render.js';
 
-const createMenuTemplate = () => {
+export const createAddButtonTemplate = () => {
   return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
-       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-       <a class="trip-tabs__btn" href="#">Stats</a>
-    </nav>`
+    `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>`
   );
 };
 
-export default class Menu {
+export default class AddButton {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createAddButtonTemplate();
   }
 
   getElement() {
