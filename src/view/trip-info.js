@@ -9,15 +9,16 @@ const createDatesTemplate = (sortedEvents) => {
   const tripFinishDate = sortedEvents[sortedEvents.length - 1].endDate;
   const isSameDay = moment(tripStartDate).isSame(tripFinishDate, `day`);
   const isSameMonth = moment(tripStartDate).isSame(tripFinishDate, `month`);
+  const firstHumanizeDate = moment(tripStartDate).format(`MMM DD`);
 
   let summaryDates = ``;
 
   if (isSameDay) {
-    summaryDates = moment(tripStartDate).format(`MMM DD`);
+    summaryDates = summaryDates = firstHumanizeDate;
   } else if (isSameMonth) {
-    summaryDates = `${moment(tripStartDate).format(`MMM DD`)}&nbsp;—&nbsp;${moment(tripFinishDate).format(`DD`)}`;
+    summaryDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`DD`)}`;
   } else {
-    summaryDates = `${moment(tripStartDate).format(`MMM DD`)}&nbsp;—&nbsp;${moment(tripFinishDate).format(`MMM DD`)}`;
+    summaryDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`MMM DD`)}`;
   }
 
   return summaryDates;
@@ -47,7 +48,7 @@ const createCitiesTemplate = (sortedEvents) => {
 
 const createTripInfoTemplate = (tripEvents) => {
   if (!tripEvents.length) {
-    return ``;
+    return `<div class="trip-info__main"></div>`;
   }
 
   const sortedEvents = tripEvents.slice().sort(getSorterRule(SORT_TYPE.EVENT));
