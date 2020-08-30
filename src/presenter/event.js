@@ -86,7 +86,7 @@ export default class Trip {
   }
 
   _renderTripBoard() {
-    if (this._tripEvents.length === 0) {
+    if (!this._tripEvents.length) {
       this._renderNoPoints();
       return;
     }
