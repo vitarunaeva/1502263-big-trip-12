@@ -1,7 +1,7 @@
 import moment from 'moment';
+import AbstractView from './abstract.js';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
 import {eventTypePostfix} from '../utils/trip.js';
-import {createElement} from '../utils/render.js';
 
 const createEventTypesTemplate = (pointId, specificType) => {
   return Object.values(specificType).map((type) => (
@@ -32,7 +32,7 @@ const createAvailableOffersTemplate = (pointId, offers, selectedOffers) => {
 };
 
 const createOfferItemTemplate = (pointId, offer, isChecked) => {
-  const normalizedOfferId = offer.title.replace(/\s/g, `-`).toLowerCase();
+  const normalizedOfferId = offer.name.replace(/\s/g, `-`).toLowerCase();
 
   return (
     `<div class="event__offer-selector">
@@ -158,27 +158,38 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
   );
 };
 
-export default class EventEditor {
+export default class EventEditor extends AbstractView {
   constructor(eventItem, tripOffers) {
+    super();
+
     this._eventItem = eventItem;
     this._offerList = tripOffers;
 
-    this._element = null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._cancelClickHandler = this._cancelClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditTripEventTemplate(this._eventItem, this._offerList);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  _cancelClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.cancelClick();
+  }
+
+  setCancelClickHandler(callback) {
+    this._callback.cancelClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._cancelClickHandler);
   }
 }

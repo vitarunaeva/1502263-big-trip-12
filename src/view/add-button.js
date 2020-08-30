@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractView from './abstract.js';
 
 export const createAddButtonTemplate = () => {
   return (
@@ -6,24 +6,9 @@ export const createAddButtonTemplate = () => {
   );
 };
 
-export default class AddButton {
-  constructor() {
-    this._element = null;
-  }
+export default class AddButton extends AbstractView {
 
   getTemplate() {
     return createAddButtonTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
