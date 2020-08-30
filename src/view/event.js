@@ -34,7 +34,7 @@ const createEventTemplate = (event) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${event.eventType}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${event.eventType.toLowerCase()}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${event.eventType} ${eventTypePostfix(event.eventType)} ${event.destination.name}</h3>
         <div class="event__schedule">
