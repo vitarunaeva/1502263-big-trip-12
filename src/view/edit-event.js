@@ -25,14 +25,14 @@ const createAvailableOffersTemplate = (pointId, offers, selectedOffers) => {
   return (
     `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${offers.map((singleOffer) => createOfferItemTemplate(pointId, singleOffer, selectedOffers.includes(singleOffer)))
+    ${selectedOffers.map((singleOffer) => createOfferItemTemplate(pointId, singleOffer, selectedOffers.includes(singleOffer)))
       .join(``)}
     </div>`
   );
 };
 
 const createOfferItemTemplate = (pointId, offer, isChecked) => {
-  const normalizedOfferId = offer.name.replace(/\s/g, `-`).toLowerCase();
+  const normalizedOfferId = offer.title.replace(/\s/g, `-`).toLowerCase();
 
   return (
     `<div class="event__offer-selector">
