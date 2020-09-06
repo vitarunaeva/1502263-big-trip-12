@@ -25,7 +25,7 @@ const createAvailableOffersTemplate = (pointId, offers, selectedOffers) => {
   return (
     `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${selectedOffers.map((singleOffer) => createOfferItemTemplate(pointId, singleOffer, selectedOffers.includes(singleOffer)))
+    ${offers.map((singleOffer) => createOfferItemTemplate(pointId, singleOffer, selectedOffers.includes(singleOffer)))
       .join(``)}
     </div>`
   );

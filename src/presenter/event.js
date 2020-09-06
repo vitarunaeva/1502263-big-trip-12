@@ -15,10 +15,9 @@ export default class Trip {
     this._noPointsComponent = new NoPointsView();
   }
 
-  init(tripEvents, eventDestinations, tripOffers) {
+  init(tripEvents, eventDestinations, offersList) {
     this._tripEvents = tripEvents.slice();
-    this._eventDestinations = eventDestinations;
-    this._tripOffers = tripOffers;
+    this._offersList = offersList;
 
     this._renderTripBoard();
   }
@@ -33,7 +32,7 @@ export default class Trip {
 
   _renderSinglePoint(pointContainer, tripEvent) {
     const eventPointComponent = new EventPointView(tripEvent);
-    const eventEditorComponent = new EventEditorView(tripEvent, this._eventDestinations, this._tripOffers);
+    const eventEditorComponent = new EventEditorView(tripEvent, this._offersList);
 
     const replacePointToForm = () => {
       replace(eventEditorComponent, eventPointComponent);
