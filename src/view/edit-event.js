@@ -163,7 +163,7 @@ export default class EventEditor extends AbstractView {
     super();
 
     this._eventItem = eventItem;
-    this._offerList = tripOffers;
+    this._offerList = tripOffers.find((offer) => eventItem.eventType === offer.eventType).offers;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._cancelClickHandler = this._cancelClickHandler.bind(this);
