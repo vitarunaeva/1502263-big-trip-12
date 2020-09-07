@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {createElement} from '../utils/render.js';
+import AbstractView from './abstract.js';
 
 const createTripDaysTemplate = (dayId, eventDate) => {
   return (
@@ -15,26 +15,18 @@ const createTripDaysTemplate = (dayId, eventDate) => {
   );
 };
 
-export default class TripDay {
+export default class TripDays extends AbstractView {
   constructor(dayId = null, eventDate = null) {
+    super();
     this._dayId = dayId;
     this._eventDate = eventDate;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDaysTemplate(this._dayId, this._eventDate);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  getPointContainer() {
+    return this.getElement().querySelector(`.trip-events__list`);
   }
 }

@@ -13,8 +13,7 @@ const offersTitleList = [
 
 const getRandomOffers = () => {
   const offers = getRandomElements(offersTitleList, 0, 6);
-  const price = getRandomInteger(10, 200);
-  return offers.map((title) => ({title, price}));
+  return offers.map((title) => ({title, price: getRandomInteger(10, 200)}));
 };
 
 export const generateOffers = () => Object.values(EVENT_TYPE).map((eventType) => {

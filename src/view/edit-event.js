@@ -1,7 +1,7 @@
 import moment from 'moment';
+import AbstractView from './abstract.js';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
 import {eventTypePostfix} from '../utils/trip.js';
-import {createElement} from '../utils/render.js';
 
 const createEventTypesTemplate = (pointId, specificType) => {
   return Object.values(specificType).map((type) => (
@@ -100,7 +100,7 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-${eventItem.id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.eventType}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.eventType.toLowerCase()}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventItem.id}" type="checkbox">
           <div class="event__type-list">
@@ -158,27 +158,38 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
   );
 };
 
-export default class EventEditor {
+export default class EventEditor extends AbstractView {
   constructor(eventItem, tripOffers) {
-    this._eventItem = eventItem;
-    this._offerList = tripOffers;
+    super();
 
-    this._element = null;
+    this._eventItem = eventItem;
+    this._offerList = tripOffers.find((offer) => eventItem.eventType === offer.eventType).offers;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._cancelClickHandler = this._cancelClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditTripEventTemplate(this._eventItem, this._offerList);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  _cancelClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.cancelClick();
+  }
+
+  setCancelClickHandler(callback) {
+    this._callback.cancelClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._cancelClickHandler);
   }
 }
