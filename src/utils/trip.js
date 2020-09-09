@@ -7,6 +7,8 @@ export const eventTypePostfix = (eventType) => {
 
 export const getSorterRule = (sortType) => {
   switch (sortType) {
+    case SORT_TYPE.EVENT:
+      return (a, b) => moment(a.startDate) - moment(b.startDate);
     case SORT_TYPE.TIME:
       return (a, b) => {
         const durationA = moment(a.endDate).diff(moment(a.startDate));
@@ -16,7 +18,7 @@ export const getSorterRule = (sortType) => {
     case SORT_TYPE.PRICE:
       return (a, b) => getTotalEventPrice(b) - getTotalEventPrice(a);
     default:
-      return (a, b) => moment(a.startDate) - moment(b.startDate);
+      return new Error(`Incorrect sort type`);
   }
 };
 
@@ -51,7 +53,7 @@ export const splitEventsByDays = (events) => {
   return groupedEvents;
 };
 
-export const splitEventsByTime = (events) => {
+export const splitEvents = (events) => {
   const groupedEvents = [];
 
   events.forEach((event) => {
@@ -64,7 +66,7 @@ export const splitEventsByTime = (events) => {
 };
 
 export const isValidShortDay = (shortDay) => {
-  return shortDay.match(/^\d{4}-\d{2}-\d{2}$/) && moment(shortDay).isValid();
+  return moment(shortDay).isValid();
 };
 
 export const convertToNullableDate = (shortDay) => {
@@ -77,7 +79,7 @@ export const groupEvents = (sortType, sortedTripEvents) => {
       return splitEventsByDays(sortedTripEvents);
     case SORT_TYPE.TIME:
     case SORT_TYPE.PRICE:
-      return splitEventsByTime(sortedTripEvents);
+      return splitEvents(sortedTripEvents);
     default:
       return {emptyDayWrapper: sortedTripEvents};
   }

@@ -36,10 +36,10 @@ export default class Trip {
       return;
     }
 
-    if (sortType !== SORT_TYPE.EVENT) {
-      this._eventSorterComponent._element.querySelector(`.trip-sort__item--day`).style.visibility = `hidden`;
-    } else if (sortType === SORT_TYPE.EVENT) {
+    if (sortType === SORT_TYPE.EVENT) {
       this._eventSorterComponent._element.querySelector(`.trip-sort__item--day`).style.visibility = ``;
+    } else {
+      this._eventSorterComponent._element.querySelector(`.trip-sort__item--day`).style.visibility = `hidden`;
     }
 
     this._clearEvents();
