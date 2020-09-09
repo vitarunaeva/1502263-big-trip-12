@@ -2,7 +2,6 @@ import AbstractView from './abstract.js';
 import {SORT_TYPE} from '../const.js';
 
 const createEventSorterTemplate = (selectedSortType) => {
-  const dayLabel = selectedSortType === SORT_TYPE.EVENT ? `DAY` : ``;
 
   const sortItemsTemplate = Object
     .values(SORT_TYPE)
@@ -21,7 +20,7 @@ const createEventSorterTemplate = (selectedSortType) => {
 
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-        <span class="trip-sort__item  trip-sort__item--day">${dayLabel}</span>
+        <span class="trip-sort__item  trip-sort__item--day">DAY</span>
         ${sortItemsTemplate}
         <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>`
