@@ -27,8 +27,8 @@ export const POINT_ID = 0;
 
 export const SORT_TYPE = {
   EVENT: `event`,
-  PRICE: `price`,
   TIME: `time`,
+  PRICE: `price`,
 };
 
 export const FILTER_TYPE = {
