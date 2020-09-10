@@ -4,9 +4,9 @@ import EventFilterView from "./view/filter";
 import EventPresenter from './presenter/event.js';
 import AddButtonView from "./view/add-button";
 
-import {getTripEvent} from "./mock/destination";
-import {generateOffers} from "./mock/offers";
-import {generateRandomEvent} from "./mock/event";
+import {getTripEvent} from "../mock/destination";
+import {generateOffers} from "../mock/offers";
+import {generateRandomEvent} from "../mock/event";
 import {RenderPosition} from "./const";
 import {render} from './utils/render.js';
 

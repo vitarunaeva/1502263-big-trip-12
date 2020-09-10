@@ -1,5 +1,5 @@
-import {EVENT_TYPE} from "../const";
-import {getRandomInteger, getRandomElements} from "../utils/random-integer";
+import {EVENT_TYPE} from "../src/const";
+import {getRandomInteger, getRandomElements} from "../src/utils/random-integer";
 
 const offersTitleList = [
   `Order Uber`,

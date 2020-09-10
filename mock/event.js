@@ -1,5 +1,5 @@
-import {getRandomInteger, getRandomElement, getRandomDate, getRandomElements} from "../utils/random-integer";
-import {EVENT_TYPE} from "../const";
+import {getRandomInteger, getRandomElement, getRandomDate, getRandomElements} from "../src/utils/random-integer";
+import {EVENT_TYPE} from "../src/const";
 
 const maxStartDays = 5;
 const maxDurationEventMinutes = 135;
