@@ -31,6 +31,6 @@ render(tripMainElement, new AddButtonView());
 render(tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
 render(tripControlsElement, new EventFilterView());
 
-eventPresenter.init(events, eventDestinations, eventOffers);
+eventPresenter.init(events, eventOffers);
 
 

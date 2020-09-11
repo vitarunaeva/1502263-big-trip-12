@@ -18,7 +18,7 @@ export const getSorterRule = (sortType) => {
     case SORT_TYPE.PRICE:
       return (a, b) => getTotalEventPrice(b) - getTotalEventPrice(a);
     default:
-      return new Error(`Incorrect sort type`);
+      throw new Error(`Incorrect sort type`);
   }
 };
 
@@ -65,12 +65,9 @@ export const splitEvents = (events) => {
   return groupedEvents;
 };
 
-export const isValidShortDay = (shortDay) => {
-  return moment(shortDay).isValid();
-};
-
 export const convertToNullableDate = (shortDay) => {
-  return isValidShortDay(shortDay) ? new Date(shortDay) : null;
+  const parsedTime = Date.parse(shortDay);
+  return isNaN(parsedTime) ? null : new Date(parsedTime);
 };
 
 export const groupEvents = (sortType, sortedTripEvents) => {
@@ -83,4 +80,14 @@ export const groupEvents = (sortType, sortedTripEvents) => {
     default:
       return {emptyDayWrapper: sortedTripEvents};
   }
+};
+
+export const defineDestination = (destinations, selectedCity) => {
+  const destination = destinations.find((dest) => dest.name === selectedCity);
+
+  if (destination) {
+    return destination;
+  }
+
+  return {name: selectedCity};
 };
