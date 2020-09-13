@@ -1,7 +1,9 @@
+import flatpickr from 'flatpickr';
 import moment from 'moment';
 import SmartView from './smart1.js';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
 import {eventTypePostfix, defineDestination} from '../utils/trip.js';
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -169,6 +171,8 @@ export default class EventEditor extends SmartView {
     this._eventItem = eventItem;
     this._sourceEventItem = eventItem;
     this._offerList = tripOffers.find((offer) => eventItem.eventType === offer.eventType).offers;
+    this._datepickers = null;
+
 
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._typeClickHandler = this._typeClickHandler.bind(this);
@@ -176,8 +180,10 @@ export default class EventEditor extends SmartView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._cancelClickHandler = this._cancelClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._dateChangeHandler = this._dateChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
   }
 
   reset() {
@@ -190,6 +196,7 @@ export default class EventEditor extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatePicker();
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setCancelClickHandler(this._callback.cancelClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -205,6 +212,48 @@ export default class EventEditor extends SmartView {
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._destinationInputHandler);
+  }
+
+  _setDatePicker() {
+    if (this._datepickers) {
+      this._datepickers.forEach((item) => item.destroy());
+      this._datepickers = null;
+    }
+
+    const eventStartDate = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+        {
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.startDate,
+          onChange: this._dateChangeHandler
+        }
+    );
+
+    const eventEndDate = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
+        {
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.endDate,
+          minDate: this._data.startDate,
+          onChange: this._dateChangeHandler
+        }
+    );
+
+    this._datepickers = [eventStartDate, eventEndDate];
+  }
+
+  _dateChangeHandler([selectedDate], dateTime) {
+    if (selectedDate) {
+      const updatedProperty = Object.create(null);
+      updatedProperty[dateTime] = selectedDate;
+      this.updateData(updatedProperty, true);
+    }
   }
 
   _priceInputHandler(evt) {
