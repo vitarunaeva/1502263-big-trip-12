@@ -3,7 +3,7 @@ import {createElement} from '../utils/render.js';
 export default class SimpleView {
   constructor() {
     if (new.target === SimpleView) {
-      throw new Error(`Can't instantiate Abstract, only concrete one.`);
+      throw new Error(`Can't instantiate SimpleView, only concrete one.`);
     }
 
     this._element = null;
