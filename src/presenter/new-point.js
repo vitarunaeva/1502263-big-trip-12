@@ -1,5 +1,5 @@
 import {nanoid} from 'nanoid';
-import EventFilterView from '../view/edit-event.js';
+import EventEditorView from '../view/edit-event.js';
 import {remove, render} from '../utils/render.js';
 import {UserAction, UpdateType, RenderPosition} from '../const.js';
 
@@ -15,12 +15,12 @@ export default class NewPoint {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init(event, tripOffers) {
+  init(destinations, tripOffers) {
     if (this._editorComponent !== null) {
       return;
     }
 
-    this._editorComponent = new EventFilterView(event, tripOffers);
+    this._editorComponent = new EventEditorView(destinations, tripOffers);
 
     this._editorComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);

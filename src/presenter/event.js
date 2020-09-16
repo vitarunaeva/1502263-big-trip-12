@@ -127,7 +127,7 @@ export default class Trip {
 
   _renderSinglePoint(pointContainer, tripEvent) {
     const point = new PointPresenter(pointContainer, this._handleViewAction, this._handleModeChange);
-    point.init(tripEvent, this._tripOffers);
+    point.init(tripEvent, this._destinations, this._tripOffers);
     this._pointStorage[tripEvent.id] = point;
   }
 

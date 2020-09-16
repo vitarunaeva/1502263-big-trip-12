@@ -83,11 +83,12 @@ export const groupEvents = (sortType, sortedTripEvents) => {
 };
 
 export const defineDestination = (destinations, selectedCity) => {
-  const destination = destinations.find((dest) => dest.name === selectedCity);
-
-  if (destination) {
-    return destination;
-  }
+  // const destination = destinations.find((dest) => dest.name === selectedCity);
+  //
+  // console.log(`destination`, destination);
+  // if (destination) {
+  //   return destination;
+  // }
 
   return {name: selectedCity};
 };

@@ -23,14 +23,14 @@ export default class Point {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(tripEvent, tripOffers) {
+  init(tripEvent, destinations, tripOffers) {
     this._tripEvent = tripEvent;
 
     const prevPointComponent = this._pointComponent;
     const prevEditorComponent = this._editorComponent;
 
     this._pointComponent = new EventPointView(this._tripEvent);
-    this._editorComponent = new EventEditorView(this._tripEvent, tripOffers);
+    this._editorComponent = new EventEditorView(destinations, tripOffers, this._tripEvent);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._editorComponent.setCancelClickHandler(this._handleCancelClick);

@@ -4,13 +4,12 @@ import SmartView from '../abstract/smart-view.js';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, EVENT_TYPE} from '../const.js';
 import {eventTypePostfix, defineDestination} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-import DestinationsModel from "../model/destinations";
 
 const NEW_EVENT = {
   id: POINT_ID,
   destination: {name: ``},
-  type: EVENT_TYPE.FLIGHT,
-  basePrice: ``,
+  eventType: EVENT_TYPE.FLIGHT,
+  price: ``,
   offers: [],
   startDate: new Date(),
   endDate: new Date(),
@@ -29,11 +28,10 @@ const createEventTypesTemplate = (selectedType) => {
       </div>`)).join(``);
 };
 
-const createDestinationItemsTemplate = (currentDestination, pointId) => {
+const createDestinationItemsTemplate = (destinations, currentDestination, pointId) => {
   const {name: currentCity} = currentDestination;
-  const destinationsModel = new DestinationsModel();
 
-  const destinationOptions = destinationsModel.getItems()
+  const destinationOptions = destinations
     .map((city) => (
       `<option value="${city.name}" ${currentCity === city.name ? `selected` : ``}>
         ${city.name}
@@ -122,7 +120,7 @@ const createRollupButtonTemplate = (pointId) => {
   </button>`;
 };
 
-const createEditTripEventTemplate = (eventItem, offersList) => {
+const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -147,10 +145,11 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
           <label class="event__label  event__type-output" for="event-destination">
             ${eventItem.eventType} ${eventTypePostfix(eventItem.eventType)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${eventItem.destination.name}" list="destination-list-${eventItem.id}">
-          <datalist id="destination-list">
-            ${createDestinationItemsTemplate(eventItem.destination, eventItem.id)}
-          </datalist>
+          <select class="event__input  event__input--destination" id="event-destination" name="event-destination" >
+            <datalist id="destination-list">
+              ${createDestinationItemsTemplate(destinations, eventItem.destination, eventItem.id)}
+            </datalist>
+          </select>
         </div>
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time">
@@ -168,7 +167,7 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${eventItem.price}">
+          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${eventItem.price}">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         ${createResetButtonTemplate(eventItem.id)}
@@ -188,12 +187,15 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
 };
 
 export default class EventEditor extends SmartView {
-  constructor(eventItem = NEW_EVENT, tripOffers = []) {
+  constructor(destinations = [], tripOffers = [], eventItem = NEW_EVENT) {
     super();
+
+    this._offers = tripOffers.find((offer) => eventItem.eventType === offer.eventType);
 
     this._eventItem = eventItem;
     this._sourceEventItem = eventItem;
-    this._offerList = tripOffers.find((offer) => eventItem.eventType === offer.eventType).offers;
+    this._destinations = destinations;
+    this._offerList = this._offers ? this._offers.offers : [];
     this._datepickers = null;
 
 
@@ -224,7 +226,7 @@ export default class EventEditor extends SmartView {
   }
 
   getTemplate() {
-    return createEditTripEventTemplate(this._eventItem, this._offerList);
+    return createEditTripEventTemplate(this._eventItem, this._destinations, this._offerList);
   }
 
   restoreHandlers() {
@@ -339,7 +341,7 @@ export default class EventEditor extends SmartView {
       return;
     }
 
-    const updatedProperty = defineDestination(this._eventItem.destination, selectedCity);
+    const updatedProperty = defineDestination(this._destinations, selectedCity);
     const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
 
     this.updateData({
