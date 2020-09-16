@@ -1,9 +1,21 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import SmartView from './smart1.js';
-import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID} from '../const.js';
+import SmartView from '../abstract/smart-view.js';
+import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, EVENT_TYPE} from '../const.js';
 import {eventTypePostfix, defineDestination} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import DestinationsModel from "../model/destinations";
+
+const NEW_EVENT = {
+  id: POINT_ID,
+  destination: {name: ``},
+  type: EVENT_TYPE.FLIGHT,
+  basePrice: ``,
+  offers: [],
+  startDate: new Date(),
+  endDate: new Date(),
+  isFavorite: false
+};
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -17,10 +29,21 @@ const createEventTypesTemplate = (selectedType) => {
       </div>`)).join(``);
 };
 
-const createDestinationItemsTemplate = (destinations) => {
-  return destinations.map((city) => (
-    `<option value="${city.name}"></option>`
-  )).join(``);
+const createDestinationItemsTemplate = (currentDestination, pointId) => {
+  const {name: currentCity} = currentDestination;
+  const destinationsModel = new DestinationsModel();
+
+  const destinationOptions = destinationsModel.getItems()
+    .map((city) => (
+      `<option value="${city.name}" ${currentCity === city.name ? `selected` : ``}>
+        ${city.name}
+      </option>`));
+
+  if (pointId === POINT_ID) {
+    destinationOptions.unshift(`<option selected disabled></option>`);
+  }
+
+  return destinationOptions.join(``);
 };
 
 const createAvailableOffersTemplate = (offers, selectedOffers) => {
@@ -126,7 +149,7 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
           </label>
           <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${eventItem.destination.name}" list="destination-list-${eventItem.id}">
           <datalist id="destination-list">
-            ${createDestinationItemsTemplate(eventItem.offers)}
+            ${createDestinationItemsTemplate(eventItem.destination, eventItem.id)}
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
@@ -165,7 +188,7 @@ const createEditTripEventTemplate = (eventItem, offersList) => {
 };
 
 export default class EventEditor extends SmartView {
-  constructor(eventItem, tripOffers) {
+  constructor(eventItem = NEW_EVENT, tripOffers = []) {
     super();
 
     this._eventItem = eventItem;
@@ -181,9 +204,19 @@ export default class EventEditor extends SmartView {
     this._cancelClickHandler = this._cancelClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatePicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset() {
@@ -197,9 +230,15 @@ export default class EventEditor extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatePicker();
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setCancelClickHandler(this._callback.cancelClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+
+    if (this._callback.cancelClick) {
+      this.setCancelClickHandler(this._callback.cancelClick);
+    }
+    if (this._callback.favoriteClick) {
+      this.setFavoriteClickHandler(this._callback.favoriteClick);
+    }
   }
 
   _setInnerHandlers() {
@@ -211,7 +250,7 @@ export default class EventEditor extends SmartView {
       .addEventListener(`click`, this._typeClickHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
-      .addEventListener(`input`, this._destinationInputHandler);
+      .addEventListener(`change`, this._destinationInputHandler);
   }
 
   _setDatePicker() {
@@ -221,15 +260,15 @@ export default class EventEditor extends SmartView {
     }
 
     const eventStartDate = flatpickr(
-        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-        {
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true,
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.startDate,
-          onChange: this._dateChangeHandler
-        }
+      this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+      {
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        dateFormat: `d/m/y H:i`,
+        defaultDate: this._eventItem.startDate,
+        onChange: this._dateChangeHandler
+      }
     );
 
     const eventEndDate = flatpickr(
@@ -239,8 +278,8 @@ export default class EventEditor extends SmartView {
           // eslint-disable-next-line camelcase
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.endDate,
-          minDate: this._data.startDate,
+          defaultDate: this._eventItem.endDate,
+          minDate: this._eventItem.startDate,
           onChange: this._dateChangeHandler
         }
     );
@@ -258,7 +297,7 @@ export default class EventEditor extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
-    const basePrice = evt.target.value;
+    const basePrice = parseInt(evt.target.value, 10);
 
     this.updateData({
       basePrice
@@ -269,26 +308,39 @@ export default class EventEditor extends SmartView {
     evt.preventDefault();
     const selectedEventType = evt.target.dataset.type;
 
-    if (selectedEventType === this._data.type) {
+    if (selectedEventType === this._eventItem.type) {
       this.getElement().querySelector(`.event__type-btn`).click();
       return;
     }
 
     this.updateData({
-      type: selectedEventType
+      type: selectedEventType,
+      offers: []
     });
+  }
+
+
+  _defineSelectedOffers() {
+    const checkedTitles = Array
+      .from(this.getElement().querySelectorAll(`.event__offer-checkbox`))
+      .filter((element) => element.checked)
+      .map((element) => element.value);
+
+    const offers = this._offerList.filter((offer) => checkedTitles.includes(offer.title));
+
+    this.updateData({offers}, true);
   }
 
   _destinationInputHandler(evt) {
     evt.preventDefault();
     const selectedCity = evt.target.value;
 
-    if (selectedCity === this._data.destination.name) {
+    if (selectedCity === this._eventItem.destination.name) {
       return;
     }
 
     const updatedProperty = defineDestination(this._eventItem.destination, selectedCity);
-    const isRenderActual = updatedProperty.description === this._data.destination.description;
+    const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
 
     this.updateData({
       destination: updatedProperty
@@ -302,15 +354,19 @@ export default class EventEditor extends SmartView {
     this._callback.cancelClick();
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
+  _favoriteClickHandler() {
+    this.updateData({
+      isFavorite: !this._sourceItem.isFavorite
+    }, true);
+    this._sourceItem = this._eventItem;
+    this._callback.favoriteClick(this._eventItem);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._sourceEventItem = this.item;
-    this._callback.formSubmit();
+    this._defineSelectedOffers();
+    this._sourceItem = this._eventItem;
+    this._callback.formSubmit(this._eventItem);
   }
 
   setFavoriteClickHandler(callback) {
@@ -321,6 +377,16 @@ export default class EventEditor extends SmartView {
   setCancelClickHandler(callback) {
     this._callback.cancelClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._cancelClickHandler);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick();
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
   setFormSubmitHandler(callback) {

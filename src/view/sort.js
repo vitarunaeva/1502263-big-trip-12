@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from '../abstract/simple-view.js';
 import {SORT_TYPE} from '../const.js';
 
 const createEventSorterTemplate = (selectedSortType) => {

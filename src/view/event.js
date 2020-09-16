@@ -1,5 +1,5 @@
 import moment from 'moment';
-import AbstractView from './abstract.js';
+import AbstractView from '../abstract/simple-view.js';
 import {eventTypePostfix} from '../utils/trip.js';
 import {humanizeDuration} from '../utils/common.js';
 import {MAX_OFFERS} from '../const';
