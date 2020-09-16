@@ -260,15 +260,15 @@ export default class EventEditor extends SmartView {
     }
 
     const eventStartDate = flatpickr(
-      this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-      {
-        enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
-        dateFormat: `d/m/y H:i`,
-        defaultDate: this._eventItem.startDate,
-        onChange: this._dateChangeHandler
-      }
+        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+        {
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._eventItem.startDate,
+          onChange: this._dateChangeHandler
+        }
     );
 
     const eventEndDate = flatpickr(
