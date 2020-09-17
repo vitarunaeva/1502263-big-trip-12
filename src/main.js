@@ -48,9 +48,6 @@ eventPresenter.init();
 render(tripMainElement, new TripInfoView(pointsModel), RenderPosition.AFTERBEGIN);
 render(tripMainElement, new AddButtonView());
 render(tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
-// render(tripControlsElement, new EventFilterView());
-
-// eventPresenter.init(pointsModel, eventOffers);
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
   evt.preventDefault();

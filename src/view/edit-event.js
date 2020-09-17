@@ -8,7 +8,7 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 const NEW_EVENT = {
   id: POINT_ID,
   destination: {name: ``},
-  eventType: EVENT_TYPE.FLIGHT,
+  type: EVENT_TYPE.FLIGHT,
   price: ``,
   offers: [],
   startDate: new Date(),
@@ -21,8 +21,8 @@ const createEventTypesTemplate = (selectedType) => {
     `<div class="event__type-item">
         <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type">
         <label class="event__type-label  event__type-label--${type.toLowerCase()}"
-               for="event-type-${type.toLowerCase()}"
-               data-type="${type.toLowerCase()}">
+               for="event-type-${type}"
+               data-type="${type}">
          ${type}
         </label>
       </div>`)).join(``);
@@ -127,7 +127,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.eventType.toLowerCase()}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.type.toLowerCase()}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
           <div class="event__type-list">
@@ -143,7 +143,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
         </div>
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination">
-            ${eventItem.eventType} ${eventTypePostfix(eventItem.eventType)}
+            ${eventItem.type} ${eventTypePostfix(eventItem.type)}
           </label>
           <select class="event__input  event__input--destination" id="event-destination" name="event-destination" >
             <datalist id="destination-list">
@@ -167,7 +167,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${eventItem.price}">
+          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${eventItem.price}" autocomplete="off">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         ${createResetButtonTemplate(eventItem.id)}
@@ -190,7 +190,7 @@ export default class EventEditor extends SmartView {
   constructor(destinations = [], tripOffers = [], eventItem = NEW_EVENT) {
     super();
 
-    this._offers = tripOffers.find((offer) => eventItem.eventType === offer.eventType);
+    this._offers = tripOffers.find((offer) => eventItem.type === offer.eventType);
 
     this._eventItem = eventItem;
     this._sourceEventItem = eventItem;
@@ -299,10 +299,10 @@ export default class EventEditor extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
-    const basePrice = parseInt(evt.target.value, 10);
+    const price = parseInt(evt.target.value, 10);
 
     this.updateData({
-      basePrice
+      price
     }, true);
   }
 
@@ -310,7 +310,7 @@ export default class EventEditor extends SmartView {
     evt.preventDefault();
     const selectedEventType = evt.target.dataset.type;
 
-    if (selectedEventType === this._eventItem.type) {
+    if (selectedEventType === this._eventItem.type.toLowerCase()) {
       this.getElement().querySelector(`.event__type-btn`).click();
       return;
     }
@@ -342,7 +342,8 @@ export default class EventEditor extends SmartView {
     }
 
     const updatedProperty = defineDestination(this._destinations, selectedCity);
-    const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
+    // const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
+    const isRenderActual = true;
 
     this.updateData({
       destination: updatedProperty
