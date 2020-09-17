@@ -39,13 +39,14 @@ export default class NewPoint {
     this._editorComponent = null;
 
     document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
   }
 
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign({}, (point, {id: nanoid(5)}))
+        Object.assign({}, point, {id: nanoid(5)})
     );
     this.destroy();
   }

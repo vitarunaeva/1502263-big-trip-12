@@ -55,5 +55,6 @@ render(tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
   evt.preventDefault();
   eventPresenter.createPoint();
+  document.querySelector(`.trip-main__event-add-btn`).setAttribute(`disabled`, `disabled`);
 });
 
