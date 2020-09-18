@@ -37,16 +37,16 @@ export const FILTER_TYPE = {
   PAST: `past`,
 };
 
-// export const newEventItem = {
-//   id: POINT_ID,
-//   destination: {name: ``},
-//   type: EVENT_TYPE.FLIGHT,
-//   price: ``,
-//   offers: [],
-//   startDate: new Date(),
-//   endDate: new Date(),
-//   isFavorite: false,
-// };
+export const NEW_EVENT = {
+  id: POINT_ID,
+  destination: {name: ``},
+  type: EVENT_TYPE.FLIGHT,
+  price: ``,
+  offers: [],
+  startDate: new Date(),
+  endDate: new Date(),
+  isFavorite: false
+};
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,

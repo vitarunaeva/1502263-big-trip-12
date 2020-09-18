@@ -1,20 +1,9 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 import SmartView from '../abstract/smart-view.js';
-import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, EVENT_TYPE} from '../const.js';
+import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, NEW_EVENT} from '../const.js';
 import {eventTypePostfix, defineDestination} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-
-const NEW_EVENT = {
-  id: POINT_ID,
-  destination: {name: ``},
-  type: EVENT_TYPE.FLIGHT,
-  price: ``,
-  offers: [],
-  startDate: new Date(),
-  endDate: new Date(),
-  isFavorite: false
-};
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -63,7 +52,12 @@ const createOfferItemTemplate = (offer, isChecked) => {
 
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${normalizedOfferId}" type="checkbox" name="event-offer-${normalizedOfferId}" ${isChecked ? `checked` : ``}>
+      <input class="event__offer-checkbox  visually-hidden"
+             id="event-offer-${normalizedOfferId}"
+             type="checkbox"
+             name="event-offer-${normalizedOfferId}"
+             value="${offer.title}"
+             ${isChecked ? `checked` : ``}>
       <label class="event__offer-label" for="event-offer-${normalizedOfferId}">
       <span class="event__offer-title">${offer.title}</span>
       +
@@ -370,6 +364,11 @@ export default class EventEditor extends SmartView {
     this._defineSelectedOffers();
     this._sourceItem = this._eventItem;
     this._callback.formSubmit(this._eventItem);
+  }
+
+  updateData(updatedData, justDataUpdating) {
+    super.updateData(updatedData, justDataUpdating);
+    this._eventItem = Object.assign({}, this._eventItem, this._data);
   }
 
   setFavoriteClickHandler(callback) {
