@@ -304,7 +304,7 @@ export default class EventEditor extends SmartView {
     evt.preventDefault();
     const selectedEventType = evt.target.dataset.type;
 
-    if (selectedEventType === this._eventItem.type.toLowerCase()) {
+    if (selectedEventType === this._eventItem.type) {
       this.getElement().querySelector(`.event__type-btn`).click();
       return;
     }
@@ -313,6 +313,8 @@ export default class EventEditor extends SmartView {
       type: selectedEventType,
       offers: []
     });
+
+    this.updateElement();
   }
 
 
@@ -325,6 +327,7 @@ export default class EventEditor extends SmartView {
     const offers = this._offerList.filter((offer) => checkedTitles.includes(offer.title));
 
     this.updateData({offers}, true);
+    this.updateElement();
   }
 
   _destinationInputHandler(evt) {
@@ -342,6 +345,8 @@ export default class EventEditor extends SmartView {
     this.updateData({
       destination: updatedProperty
     }, isRenderActual);
+
+    this.updateElement();
   }
 
 
