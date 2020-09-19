@@ -302,6 +302,11 @@ export default class EventEditor extends SmartView {
 
   _typeClickHandler(evt) {
     evt.preventDefault();
+
+    if (evt.target.className.indexOf(`event__type-label`) === -1) {
+      return;
+    }
+
     const selectedEventType = evt.target.dataset.type;
 
     if (selectedEventType === this._eventItem.type) {
