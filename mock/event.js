@@ -13,7 +13,7 @@ export const generateRandomEvent = (destination, availableOffers) => {
   return {
     id: getRandomInteger(0, 100),
     destination: getRandomElement(destination),
-    eventType,
+    type: eventType,
     price: getRandomInteger(2, 50) * 10,
     offers,
     startDate,

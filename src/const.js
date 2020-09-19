@@ -37,15 +37,15 @@ export const FILTER_TYPE = {
   PAST: `past`,
 };
 
-export const newEventItem = {
+export const NEW_EVENT = {
   id: POINT_ID,
   destination: {name: ``},
-  eventType: EVENT_TYPE.FLIGHT,
+  type: EVENT_TYPE.FLIGHT,
   price: ``,
   offers: [],
   startDate: new Date(),
   endDate: new Date(),
-  isFavorite: false,
+  isFavorite: false
 };
 
 export const RenderPosition = {
@@ -53,5 +53,22 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`,
   AFTEREND: `afterend`,
   BEFOREBEGIN: `beforebegin`
+};
+
+export const PointMode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
+export const UserAction = {
+  UPDATE_POINT: `UPDATE_POINT`,
+  ADD_POINT: `ADD_POINT`,
+  DELETE_POINT: `DELETE_POINT`
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`,
 };
 

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Abstract from './abstract.js';
+import SimpleView from '../abstract/simple-view.js';
 
 const createDayInfoTemplate = (dayId, groupedDate) => {
   if (groupedDate === null) {
@@ -26,7 +26,7 @@ const createTripDaysTemplate = (dayId, groupedDate) => {
   );
 };
 
-export default class TripDays extends Abstract {
+export default class TripDays extends SimpleView {
   constructor(dayId = null, groupedDate = null) {
     super();
 

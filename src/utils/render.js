@@ -1,5 +1,5 @@
 import {RenderPosition} from '../const.js';
-import AbstractView from '../view/abstract.js';
+import AbstractView from '../abstract/simple-view.js';
 
 export const render = (container, child, place = RenderPosition.BEFOREEND) => {
   if (container instanceof AbstractView) {
@@ -60,6 +60,10 @@ export const replace = (newChild, oldChild) => {
 };
 
 export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }

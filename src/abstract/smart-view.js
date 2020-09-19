@@ -1,6 +1,6 @@
-import AbstractView from './abstract.js';
+import SimpleView from './simple-view.js';
 
-export default class Smart extends AbstractView {
+export default class SmartView extends SimpleView {
   constructor() {
     super();
     this._data = {};
