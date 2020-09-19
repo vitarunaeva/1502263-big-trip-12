@@ -189,6 +189,7 @@ export default class EventEditor extends SmartView {
     this._eventItem = eventItem;
     this._sourceEventItem = eventItem;
     this._destinations = destinations;
+    this._allOffers = [...tripOffers];
     this._offerList = this._offers ? this._offers.offers : [];
     this._datepickers = null;
 
@@ -308,6 +309,8 @@ export default class EventEditor extends SmartView {
     }
 
     const selectedEventType = evt.target.dataset.type;
+
+    this._offerList = this._allOffers.find((offer) => selectedEventType === offer.eventType).offers;
 
     if (selectedEventType === this._eventItem.type) {
       this.getElement().querySelector(`.event__type-btn`).click();
