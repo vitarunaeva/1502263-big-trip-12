@@ -1,4 +1,4 @@
-import AbstractView from '../abstract/simple-view.js';
+import SmartView from '../abstract/smart-view.js';
 import {SORT_TYPE} from '../const.js';
 
 const createEventSorterTemplate = (selectedSortType) => {
@@ -27,17 +27,21 @@ const createEventSorterTemplate = (selectedSortType) => {
   );
 };
 
-export default class EventSort extends AbstractView {
+export default class EventSort extends SmartView {
   constructor(initSortType) {
     super();
 
-    this._initSortType = initSortType;
+    this._currentSortType = initSortType;
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createEventSorterTemplate(this._initSortType);
+    return createEventSorterTemplate(this._currentSortType );
+  }
+
+  restoreHandlers() {
+    this.setSortTypeChangeHandler(this._callback.sortTypeChange);
   }
 
   _sortTypeChangeHandler(evt) {
@@ -45,7 +49,9 @@ export default class EventSort extends AbstractView {
       return;
     }
 
-    this._callback.sortTypeChange(evt.target.value);
+    this._currentSortType = evt.target.value;
+    this.updateElement();
+    this._callback.sortTypeChange(this._currentSortType);
   }
 
   setSortTypeChangeHandler(callback) {

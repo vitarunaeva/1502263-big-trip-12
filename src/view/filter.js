@@ -1,25 +1,26 @@
 import AbstractView from '../abstract/simple-view.js';
-import {FILTER_TYPE} from '../const.js';
 
-const createFilterItemTemplate = (title, currentFilterType) => {
+const createFilterItemTemplate = (title, currentFilterType, isFilteredTaskExist) => {
   return (
     `<div class="trip-filters__filter">
         <input id="filter-${title}" type="radio" name="trip-filter"
           class="trip-filters__filter-input  visually-hidden"
           value="${title}"
-          ${title === currentFilterType ? `checked` : ``}
+          ${isFilteredTaskExist ? `` : `disabled`}
         >
-        <label class="trip-filters__filter-label" for="filter-${title}">
-          ${title.toUpperCase()}
+        <label for="filter-${title}"
+          class="trip-filters__filter-label  ${isFilteredTaskExist ? `` : `trip-filters__filter-label--empty`}"
+        >
+          ${title}
         </label>
       </div>`
   );
 };
 
-const createEventFilterTemplate = (currentFilterType) => {
+const createEventFilterTemplate = (currentFilterType, filters) => {
   const filterItemsTemplate = Object
-    .values(FILTER_TYPE)
-    .map((filter) => createFilterItemTemplate(filter, currentFilterType))
+    .entries(filters)
+    .map(([filterTitle, isFilteredTaskExist]) => createFilterItemTemplate(filterTitle, currentFilterType, isFilteredTaskExist))
     .join(``);
 
   return (
@@ -31,16 +32,17 @@ const createEventFilterTemplate = (currentFilterType) => {
 };
 
 export default class EventFilter extends AbstractView {
-  constructor(currentFilterType) {
+  constructor(currentFilterType, filters) {
     super();
 
     this._currentFilter = currentFilterType;
+    this._filters = filters;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createEventFilterTemplate(this._currentFilter);
+    return createEventFilterTemplate(this._currentFilter, this._filters);
   }
 
   _filterTypeChangeHandler(evt) {
