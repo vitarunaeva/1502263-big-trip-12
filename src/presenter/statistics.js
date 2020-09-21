@@ -23,7 +23,7 @@ export default class Statistics {
     }
 
     this._statisticsComponent = new StatisticsView(this._pointsModel.getItems());
-    render(this._statisticsContainer, this._statisticsComponent, RenderPosition.BEFOREEND);
+    render(this._statisticsContainer, this._statisticsComponent, RenderPosition.BEFOREBEGIN);
   }
 
   destroy() {
@@ -37,7 +37,7 @@ export default class Statistics {
 
   _handleMenuEvent(_event, menuItem) {
     switch (menuItem) {
-      case TabNavItem.STATISTICS:
+      case TabNavItem.STATISTICS.toLowerCase():
         this._renderStatistics();
         break;
       default:

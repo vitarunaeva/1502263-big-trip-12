@@ -52,11 +52,11 @@ export default class Menu {
         this._filterPresenter.init();
         this._newPointModel.setItem(UpdateType.MAJOR, menuItem);
         break;
-      case MenuItem.TABLE:
+      case MenuItem.TABLE.toLowerCase():
         this._setActiveNavItem(menuItem);
         this._filterPresenter.init();
         break;
-      case MenuItem.STATISTICS:
+      case MenuItem.STATISTICS.toLowerCase():
         this._setActiveNavItem(menuItem);
         this._filterPresenter.destroy();
         break;
@@ -68,7 +68,7 @@ export default class Menu {
       this._filterModel.setItem(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
     }
 
-    if (this._menuModel.getItem() === tab) {
+    if (this._menuModel.getItem().toLowerCase() === tab) {
       return;
     }
 

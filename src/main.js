@@ -19,7 +19,6 @@ const modelStore = StoreFactory.create(events, eventOffers, eventDestinations);
 
 const bodyElement = document.querySelector(`.page-body`);
 const headerElement = bodyElement.querySelector(`.page-header`);
-// const mainElement = bodyElement.querySelector(`.page-main`);
 
 const tripMainElement = headerElement.querySelector(`.trip-main`);
 
@@ -30,18 +29,13 @@ const statsElement = mainElement.querySelector(`.page-body__container`);
 const summaryPresenter = new SummaryPresenter(tripMainElement, modelStore);
 const menuPresenter = new MenuPresenter(tripMainElement, modelStore);
 const eventPresenter = new EventPresenter(tripEventsElement, modelStore);
-const statsPresenter = new StatisticsPresenter(statsElement, modelStore);
-// const tripControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
-// const tripControlsTitle = tripControlsElement.querySelector(`h2`);
+const statisticsPresenter = new StatisticsPresenter(statsElement, modelStore);
 
-//
-// const filterPresenter = new FilterPresenter(tripControlsElement, filterModel);
-// const eventPresenter = new EventPresenter(tripEventsElement, {pointsModel, offersModel, destinationsModel, filterModel});
-
-// filterPresenter.init();
 summaryPresenter.init();
 menuPresenter.init();
 eventPresenter.init();
+
+statisticsPresenter.init();
 
 // render(tripMainElement, new TripInfoView(pointsModel), RenderPosition.AFTERBEGIN);
 // render(tripMainElement, new AddButtonView());
@@ -53,4 +47,3 @@ eventPresenter.init();
 //   document.querySelector(`.trip-main__event-add-btn`).setAttribute(`disabled`, `disabled`);
 // });
 
-statsPresenter.init();
