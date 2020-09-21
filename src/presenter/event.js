@@ -7,7 +7,7 @@ import {getSorterRule, groupEvents, convertToNullableDate, getFilterRule} from '
 import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem} from '../const.js';
 import {remove, render} from '../utils/render.js';
 
-export default class Trip {
+export default class Event {
   constructor(tripEventsContainer, modelStore) {
     this._tripEventsContainer = tripEventsContainer;
 
@@ -61,6 +61,9 @@ export default class Trip {
     }
 
     this._currentSortType = SORT_TYPE.EVENT;
+    for (const point of Object.values(this._pointStorage)) {
+      point.replaceEditFormToPoint();
+    }
     this._newPointPresenter.init(this._destinations, this._tripOffers);
   }
 
@@ -185,6 +188,7 @@ export default class Trip {
       this._dayStorage[0] = eventDayComponent;
       render(this._tripEventsContainer, eventDayComponent, RenderPosition.BEFOREEND);
       const pointContainer = eventDayComponent.getPointContainer();
+
       groupedEvents.forEach((tripEvent) => {
         this._renderSinglePoint(pointContainer, tripEvent);
       });

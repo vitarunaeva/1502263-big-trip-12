@@ -14,13 +14,14 @@ export default class Point {
     this._mode = PointMode.DEFAULT;
 
     this._replacePointToEditor = this._replacePointToEditor.bind(this);
-    this._replaceEditFormToPoint = this._replaceEditFormToPoint.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCancelClick = this._handleCancelClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+
+    this.replaceEditFormToPoint = this.replaceEditFormToPoint.bind(this);
   }
 
   init(tripEvent, destinations, tripOffers) {
@@ -62,8 +63,17 @@ export default class Point {
 
   resetView() {
     if (this._mode !== PointMode.DEFAULT) {
-      this._replaceEditFormToPoint();
+      this.replaceEditFormToPoint();
     }
+  }
+
+  replaceEditFormToPoint() {
+    if (this._mode !== PointMode.EDITING) {
+      return;
+    }
+    replace(this._pointComponent, this._editorComponent);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = PointMode.DEFAULT;
   }
 
   _replacePointToEditor() {
@@ -73,17 +83,11 @@ export default class Point {
     this._mode = PointMode.EDITING;
   }
 
-  _replaceEditFormToPoint() {
-    replace(this._pointComponent, this._editorComponent);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._mode = PointMode.DEFAULT;
-  }
-
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       this._editorComponent.reset();
-      this._replaceEditFormToPoint();
+      this.replaceEditFormToPoint();
     }
   }
 
@@ -92,7 +96,7 @@ export default class Point {
   }
 
   _handleCancelClick() {
-    this._replaceEditFormToPoint();
+    this.replaceEditFormToPoint();
   }
 
   _handleDeleteClick() {

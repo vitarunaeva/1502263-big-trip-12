@@ -11,7 +11,7 @@ export const generateRandomEvent = (destination, availableOffers) => {
   const offers = getRandomElements(filteredOffers, 0, filteredOffers.length - 1);
 
   return {
-    id: getRandomInteger(0, 100),
+    id: getRandomInteger(1, 100),
     destination: getRandomElement(destination),
     type: eventType,
     price: getRandomInteger(2, 50) * 10,

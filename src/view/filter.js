@@ -6,6 +6,7 @@ const createFilterItemTemplate = (title, currentFilterType, isFilteredTaskExist)
         <input id="filter-${title}" type="radio" name="trip-filter"
           class="trip-filters__filter-input  visually-hidden"
           value="${title}"
+          ${ currentFilterType === title ? `checked` : ``}
           ${isFilteredTaskExist ? `` : `disabled`}
         >
         <label for="filter-${title}"

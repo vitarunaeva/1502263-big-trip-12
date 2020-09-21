@@ -64,6 +64,9 @@ export default class Menu {
   }
 
   _setActiveNavItem(tab) {
+    console.log(`tab`, tab);
+    console.log(`this._filterModel.getItem()`, this._filterModel.getItem());
+    console.log(`FILTER_TYPE.EVERYTHING`, FILTER_TYPE.EVERYTHING);
     if (this._filterModel.getItem() !== FILTER_TYPE.EVERYTHING) {
       this._filterModel.setItem(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
     }
