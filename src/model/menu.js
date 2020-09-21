@@ -8,4 +8,13 @@ export default class Menu extends Observer {
 
     this._activeItem = TabNavItem.TABLE;
   }
+
+  getItem() {
+    return this._activeItem;
+  }
+
+  setItem(item) {
+    // FIXME
+    this._activeItem = item;
+  }
 }
