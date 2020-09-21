@@ -11,39 +11,39 @@ const createDatesTemplate = (sortedEvents) => {
   const isSameMonth = moment(tripStartDate).isSame(tripFinishDate, `month`);
   const firstHumanizeDate = moment(tripStartDate).format(`MMM DD`);
 
-  let summaryDates = ``;
+  let tripInfoDates = ``;
 
   if (isSameDay) {
-    summaryDates = summaryDates = firstHumanizeDate;
+    tripInfoDates = tripInfoDates = firstHumanizeDate;
   } else if (isSameMonth) {
-    summaryDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`DD`)}`;
+    tripInfoDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`DD`)}`;
   } else {
-    summaryDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`MMM DD`)}`;
+    tripInfoDates = `${firstHumanizeDate}&nbsp;—&nbsp;${moment(tripFinishDate).format(`MMM DD`)}`;
   }
 
-  return summaryDates;
+  return tripInfoDates;
 };
 
 const createCitiesTemplate = (sortedEvents) => {
   let sortedCities = new Set(sortedEvents.map((event) => event.destination.name));
   let cities = [...sortedCities];
 
-  const summaryPoints = [];
-  summaryPoints.push([...cities][0]);
+  const tripInfoPoints = [];
+  tripInfoPoints.push([...cities][0]);
 
   switch (cities.length) {
     case 1:
       break;
     case 2:
-      summaryPoints.push(cities[1]);
+      tripInfoPoints.push(cities[1]);
       break;
     default:
-      summaryPoints.push(`...`);
-      summaryPoints.push(cities[cities.length - 1]);
+      tripInfoPoints.push(`...`);
+      tripInfoPoints.push(cities[cities.length - 1]);
       break;
   }
 
-  return summaryPoints.join(`&nbsp;—&nbsp;`);
+  return tripInfoPoints.join(`&nbsp;—&nbsp;`);
 };
 
 const createTripInfoTemplate = (tripEvents) => {

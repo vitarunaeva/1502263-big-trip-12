@@ -1,7 +1,7 @@
 import EventPresenter from './presenter/event.js';
 
 import StoreFactory from './model/store-factore';
-import SummaryPresenter from './presenter/summary.js';
+import TripInfoPresenter from './presenter/trip-info.js';
 import MenuPresenter from './presenter/menu.js';
 import StatisticsPresenter from './presenter/statistics.js';
 
@@ -24,14 +24,14 @@ const tripMainElement = headerElement.querySelector(`.trip-main`);
 
 const mainElement = document.querySelector(`.page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-const statsElement = mainElement.querySelector(`.page-body__container`);
+const statisticsElement = mainElement.querySelector(`.page-body__container`);
 
-const summaryPresenter = new SummaryPresenter(tripMainElement, modelStore);
+const tripInfoPresenter = new TripInfoPresenter(tripMainElement, modelStore);
 const menuPresenter = new MenuPresenter(tripMainElement, modelStore);
 const eventPresenter = new EventPresenter(tripEventsElement, modelStore);
-const statisticsPresenter = new StatisticsPresenter(statsElement, modelStore);
+const statisticsPresenter = new StatisticsPresenter(statisticsElement, modelStore);
 
-summaryPresenter.init();
+tripInfoPresenter.init();
 menuPresenter.init();
 eventPresenter.init();
 

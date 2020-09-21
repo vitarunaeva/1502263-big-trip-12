@@ -1,4 +1,4 @@
-import StatisticsView from '../view/stats.js';
+import StatisticsView from '../view/statistics.js';
 import {render, remove} from '../utils/render.js';
 import {RenderPosition, ModelType, TabNavItem} from '../const.js';
 

@@ -1,10 +1,10 @@
 import {StatisticsType, MOVE_TYPE} from '../const';
 import moment from 'moment';
 
-const extractValue = (event, statsType) => {
+const extractValue = (event, statisticsType) => {
   let result = 0;
 
-  switch (statsType) {
+  switch (statisticsType) {
     case StatisticsType.MONEY:
       result += event.price;
       break;
@@ -24,8 +24,8 @@ const extractValue = (event, statsType) => {
   return result;
 };
 
-const roundResult = (rawValue, statsType) => {
-  switch (statsType) {
+const roundResult = (rawValue, statisticsType) => {
+  switch (statisticsType) {
     case StatisticsType.TIME_SPENT:
       return moment.duration(rawValue).hours() + 1;
     default:
@@ -33,24 +33,24 @@ const roundResult = (rawValue, statsType) => {
   }
 };
 
-export const calculateStat = (events, statsType) => {
+export const calculateStat = (events, statisticsType) => {
   const groupedEvents = Object.create(null);
 
   events.forEach((event) => {
     if (!groupedEvents[event.type]) {
 
-      const extractedValue = extractValue(event, statsType);
+      const extractedValue = extractValue(event, statisticsType);
       if (extractedValue) {
         groupedEvents[event.type] = extractedValue;
       }
 
     } else {
-      groupedEvents[event.type] += extractValue(event, statsType);
+      groupedEvents[event.type] += extractValue(event, statisticsType);
     }
   });
 
   Object.keys(groupedEvents).forEach((statKey) => {
-    groupedEvents[statKey] = roundResult(groupedEvents[statKey], statsType);
+    groupedEvents[statKey] = roundResult(groupedEvents[statKey], statisticsType);
     return;
   });
 
