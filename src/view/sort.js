@@ -37,7 +37,7 @@ export default class EventSort extends SmartView {
   }
 
   getTemplate() {
-    return createEventSorterTemplate(this._currentSortType );
+    return createEventSorterTemplate(this._currentSortType);
   }
 
   restoreHandlers() {
