@@ -1,14 +1,16 @@
-import Observer from '../abstract/observer.js';
+import {ObserverDecorator as Observervable} from '../abstract/observer.js';
+import ActiveItem from '../abstract/active-item.js';
 import {FILTER_TYPE} from '../const.js';
 
-export default class Filter extends Observer {
+// eslint-disable-next-line new-cap
+export default class Filter extends Observervable(ActiveItem) {
   constructor() {
     super();
 
     this._activeItem = FILTER_TYPE.EVERYTHING;
   }
-
-  getItem() {
-    return this._activeItem;
-  }
+  //
+  // getItem() {
+  //   return this._activeItem;
+  // }
 }
