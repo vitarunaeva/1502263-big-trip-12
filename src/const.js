@@ -89,7 +89,7 @@ export const ModelType = {
   OFFERS: `Offers`,
   MENU: `Menu`,
   POINTS: `Points`,
-  POINT_NEW: `PointNew`,
+  NEW_POINT: `NewPoint`,
 };
 
 export const TabAdditionalItem = {

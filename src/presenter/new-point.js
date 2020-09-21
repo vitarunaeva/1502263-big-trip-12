@@ -6,7 +6,7 @@ import {UserAction, UpdateType, RenderPosition, ModelType} from '../const.js';
 export default class NewPoint {
   constructor(pointContainer, modelStore, changeData) {
     this._pointContainer = pointContainer;
-    this._newPointModel = modelStore.get(ModelType.POINT_NEW);
+    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
     this._changeData = changeData;
 
     this._editorComponent = null;

@@ -15,7 +15,7 @@ export default class Trip {
     this._tripOffers = modelStore.get(ModelType.OFFERS).getItems();
     this._destinations = modelStore.get(ModelType.DESTINATIONS).getItems();
     this._filterModel = modelStore.get(ModelType.FILTER);
-    this._pointNewModel = modelStore.get(ModelType.POINT_NEW);
+    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
     this._menuModel = modelStore.get(ModelType.MENU);
 
     this._currentSortType = SORT_TYPE.EVENT;
@@ -39,7 +39,7 @@ export default class Trip {
   init() {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
-    this._pointNewModel.addObserver(this._createPoint);
+    this._newPointModel.addObserver(this._createPoint);
 
     this._renderTripBoard();
   }
@@ -52,7 +52,7 @@ export default class Trip {
 
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
-    this._pointNewModel.removeObserver(this._createPoint);
+    this._newPointModel.removeObserver(this._createPoint);
   }
 
   _createPoint(_event, payload) {

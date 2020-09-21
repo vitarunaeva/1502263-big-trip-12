@@ -7,7 +7,7 @@ import {UpdateType, RenderPosition, ModelType, MenuItem, FILTER_TYPE} from '../c
 export default class Menu {
   constructor(menuContainer, modelStore) {
     this._menuContainer = menuContainer;
-    this._pointNewModel = modelStore.get(ModelType.POINT_NEW);
+    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
     this._menuModel = modelStore.get(ModelType.MENU);
     this._filterModel = modelStore.get(ModelType.FILTER);
 
@@ -22,7 +22,7 @@ export default class Menu {
     this._handleMenuClick = this._handleMenuClick.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._pointNewModel.addObserver(this._handleModelEvent);
+    this._newPointModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -41,8 +41,8 @@ export default class Menu {
   }
 
   _handleModelEvent(_event, payload) {
-    const isPointNewActive = payload !== null;
-    this._buttonAddComponent.setDisabledButton(isPointNewActive);
+    const isNewPointActive = payload !== null;
+    this._buttonAddComponent.setDisabledButton(isNewPointActive);
   }
 
   _handleMenuClick(menuItem) {
@@ -50,7 +50,7 @@ export default class Menu {
       case MenuItem.ADD_NEW_EVENT:
         this._setActiveNavItem(MenuItem.TABLE);
         this._filterPresenter.init();
-        this._pointNewModel.setItem(UpdateType.MAJOR, menuItem);
+        this._newPointModel.setItem(UpdateType.MAJOR, menuItem);
         break;
       case MenuItem.TABLE:
         this._setActiveNavItem(menuItem);

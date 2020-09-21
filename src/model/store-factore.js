@@ -4,7 +4,7 @@ import Points from './points.js';
 import Filter from './filter.js';
 import Offers from './offers.js';
 import Destinations from './destinations.js';
-import PointNew from './point-new.js';
+import NewPoint from './new-point.js';
 
 export default class StoreFactory {
   static create(tripEvents, tripOffers, destinations) {
@@ -25,8 +25,8 @@ export default class StoreFactory {
     pointsModel.setItems(tripEvents);
     modelStore.set(pointsModel);
 
-    const pointNew = new PointNew();
-    modelStore.set(pointNew);
+    const newPoint = new NewPoint();
+    modelStore.set(newPoint);
 
     const filterModel = new Filter();
     modelStore.set(filterModel);
