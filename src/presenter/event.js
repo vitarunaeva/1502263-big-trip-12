@@ -121,10 +121,10 @@ export default class Trip {
 
   _handleMenuEvent(_updateType, menuItem) {
     switch (menuItem) {
-      case TabNavItem.TABLE:
+      case TabNavItem.TABLE.toLowerCase():
         this._renderTripBoard();
         break;
-      case TabNavItem.STATISTICS:
+      case TabNavItem.STATISTICS.toLowerCase():
         this._clearTripBoard({resetSortType: true});
         break;
       default:
