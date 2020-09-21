@@ -9,8 +9,4 @@ export default class Filter extends Observervable(ActiveItem) {
 
     this._activeItem = FILTER_TYPE.EVERYTHING;
   }
-  //
-  // getItem() {
-  //   return this._activeItem;
-  // }
 }

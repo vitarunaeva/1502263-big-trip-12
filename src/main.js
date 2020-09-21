@@ -37,13 +37,4 @@ eventPresenter.init();
 
 statisticsPresenter.init();
 
-// render(tripMainElement, new TripInfoView(pointsModel), RenderPosition.AFTERBEGIN);
-// render(tripMainElement, new AddButtonView());
-// render(tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
-
-// document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-//   evt.preventDefault();
-//   eventPresenter.createPoint();
-//   document.querySelector(`.trip-main__event-add-btn`).setAttribute(`disabled`, `disabled`);
-// });
 

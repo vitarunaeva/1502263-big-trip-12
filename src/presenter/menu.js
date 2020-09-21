@@ -32,8 +32,6 @@ export default class Menu {
     this._buttonAddComponent = new EventAddButtonView();
     render(this._menuContainer, this._buttonAddComponent);
 
-    // render(this._tripConntrolsTitle, this._menuContainer, RenderPosition.AFTEREND);
-
     this._tabsComponent.setMenuClickHandler(this._handleMenuClick);
     this._buttonAddComponent.setButtonClickHandler(this._handleMenuClick);
 
@@ -64,9 +62,6 @@ export default class Menu {
   }
 
   _setActiveNavItem(tab) {
-    console.log(`tab`, tab);
-    console.log(`this._filterModel.getItem()`, this._filterModel.getItem());
-    console.log(`FILTER_TYPE.EVERYTHING`, FILTER_TYPE.EVERYTHING);
     if (this._filterModel.getItem() !== FILTER_TYPE.EVERYTHING) {
       this._filterModel.setItem(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
     }

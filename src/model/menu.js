@@ -9,13 +9,4 @@ export default class Menu extends Observervable(ActiveItem) {
 
     this._activeItem = TabNavItem.TABLE;
   }
-
-  // getItem() {
-  //   return this._activeItem;
-  // }
-  //
-  // setItem(item) {
-  //   // FIXME
-  //   this._activeItem = item;
-  // }
 }

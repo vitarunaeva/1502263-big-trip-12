@@ -7,8 +7,7 @@ const createMenuTemplate = (currentTab) => {
     .map((tab) => (
       `<a href="#"
         class="trip-tabs__btn  ${currentTab === tab ? `trip-tabs__btn--active` : ``}"
-        data-tab="${tab.toLowerCase()}"
-      >
+        data-tab="${tab.toLowerCase()}">
         ${tab}
       </a>`))
     .join(``);
