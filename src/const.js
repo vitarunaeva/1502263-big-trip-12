@@ -79,8 +79,8 @@ export const StatisticsType = {
 };
 
 export const TabNavItem = {
-  TABLE: `table`,
-  STATISTICS: `statistics`
+  TABLE: `Table`,
+  STATISTICS: `Statistics`
 };
 
 export const ModelType = {

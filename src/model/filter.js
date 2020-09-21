@@ -7,4 +7,8 @@ export default class Filter extends Observer {
 
     this._activeItem = FILTER_TYPE.EVERYTHING;
   }
+
+  getItem() {
+    return this._activeItem;
+  }
 }

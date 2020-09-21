@@ -8,6 +8,7 @@ export default class Filter {
     this._filterContainer = filterContainer;
     this._filterModel = storeModel.get(ModelType.FILTER);
     this._pointsModel = storeModel.get(ModelType.POINTS);
+    this._tripConntrolsTitle = this._filterContainer.querySelector(`h2`);
     this._currentFilter = null;
 
     this._filterComponent = null;

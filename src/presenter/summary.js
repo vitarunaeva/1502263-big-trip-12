@@ -1,5 +1,4 @@
 import TripInfoView from '../view/trip-info';
-import MenuView from "../view/menu";
 
 import {render, replace, remove} from '../utils/render.js';
 import {RenderPosition, ModelType} from '../const.js';
@@ -24,7 +23,7 @@ export default class Summary {
 
 
     // render(this._summaryComponent, null, RenderPosition.AFTERBEGIN);
-    render(this._tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
+    // render(this._tripControlsTitle, new MenuView(), RenderPosition.AFTEREND);
 
     if (prevSummaryComponent === null) {
       render(this._summaryContainer, this._summaryComponent, RenderPosition.AFTERBEGIN);

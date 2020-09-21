@@ -26,14 +26,13 @@ export default class Menu {
   }
 
   init() {
-    console.log(`this._menuModel`, this._menuModel);
     this._tabsComponent = new MenuView(this._menuModel.getItem());
-    render(this._controlsContainer, this._tabsComponent, RenderPosition.BEFOREEND);
+    render(this._tripConntrolsTitle, this._tabsComponent, RenderPosition.AFTEREND);
 
     this._buttonAddComponent = new EventAddButtonView();
-    render(this._menuContainer, this._buttonAddComponent, RenderPosition.BEFOREEND);
+    render(this._menuContainer, this._buttonAddComponent);
 
-    render(this._tripConntrolsTitle, this._menuContainer, RenderPosition.AFTEREND);
+    // render(this._tripConntrolsTitle, this._menuContainer, RenderPosition.AFTEREND);
 
     this._tabsComponent.setMenuClickHandler(this._handleMenuClick);
     this._buttonAddComponent.setButtonClickHandler(this._handleMenuClick);
