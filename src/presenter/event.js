@@ -4,17 +4,19 @@ import NoPointsView from '../view/no-points.js';
 import PointPresenter from './point.js';
 import NewPointPresenter from './new-point.js';
 import {getSorterRule, groupEvents, convertToNullableDate, getFilterRule} from '../utils/trip.js';
-import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE} from '../const.js';
+import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem} from '../const.js';
 import {remove, render} from '../utils/render.js';
 
-export default class Trip {
-  constructor(tripEventsContainer, {pointsModel, offersModel, destinationsModel, filterModel} = {}) {
+export default class Event {
+  constructor(tripEventsContainer, modelStore) {
     this._tripEventsContainer = tripEventsContainer;
 
-    this._pointsModel = pointsModel;
-    this._tripOffers = offersModel.getItems();
-    this._destinations = destinationsModel.getItems();
-    this._filterModel = filterModel;
+    this._pointsModel = modelStore.get(ModelType.POINTS);
+    this._tripOffers = modelStore.get(ModelType.OFFERS).getItems();
+    this._destinations = modelStore.get(ModelType.DESTINATIONS).getItems();
+    this._filterModel = modelStore.get(ModelType.FILTER);
+    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
+    this._menuModel = modelStore.get(ModelType.MENU);
 
     this._currentSortType = SORT_TYPE.EVENT;
     this._dayStorage = Object.create(null);
@@ -26,25 +28,47 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleMenuEvent = this._handleMenuEvent.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._createPoint = this._createPoint.bind(this);
+    this._menuModel.addObserver(this._handleMenuEvent);
 
-    this._newPointPresenter = new NewPointPresenter(this._tripEventsContainer, this._handleViewAction);
+    this._newPointPresenter = new NewPointPresenter(this._tripEventsContainer, modelStore, this._handleViewAction);
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+    this._newPointModel.addObserver(this._createPoint);
+
     this._renderTripBoard();
   }
 
-  createPoint() {
+  destroy() {
+    this._clearTripBoard({resetSortType: true});
+
+    // remove(this._taskListComponent);
+    // remove(this._boardComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+    this._newPointModel.removeObserver(this._createPoint);
+  }
+
+  _createPoint(_event, payload) {
+    if (payload === null) {
+      return;
+    }
+
     this._currentSortType = SORT_TYPE.EVENT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
+    for (const point of Object.values(this._pointStorage)) {
+      point.replaceEditFormToPoint();
+    }
     this._newPointPresenter.init(this._destinations, this._tripOffers);
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.getItem();
 
     return this._pointsModel.getItems()
       .filter(getFilterRule(filterType))
@@ -98,6 +122,18 @@ export default class Trip {
     }
   }
 
+  _handleMenuEvent(_updateType, menuItem) {
+    switch (menuItem) {
+      case TabNavItem.TABLE.toLowerCase():
+        this._renderTripBoard();
+        break;
+      case TabNavItem.STATISTICS.toLowerCase():
+        this._clearTripBoard({resetSortType: true});
+        break;
+      default:
+        break;
+    }
+  }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
@@ -152,6 +188,7 @@ export default class Trip {
       this._dayStorage[0] = eventDayComponent;
       render(this._tripEventsContainer, eventDayComponent, RenderPosition.BEFOREEND);
       const pointContainer = eventDayComponent.getPointContainer();
+
       groupedEvents.forEach((tripEvent) => {
         this._renderSinglePoint(pointContainer, tripEvent);
       });

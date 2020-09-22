@@ -1,16 +1,59 @@
-import AbstractView from '../abstract/simple-view.js';
+import SmartView from '../abstract/smart-view.js';
+import {TabNavItem} from '../const.js';
 
-const createMenuTemplate = () => {
+const createMenuTemplate = (currentTab) => {
+  return Object
+    .values(TabNavItem)
+    .map((tab) => (
+      `<a href="#"
+        class="trip-tabs__btn  ${currentTab === tab ? `trip-tabs__btn--active` : ``}"
+        data-tab="${tab.toLowerCase()}">
+        ${tab}
+      </a>`))
+    .join(``);
+};
+
+const createTripTabsTemplate = (currentTab) => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-       <a class="trip-tabs__btn" href="#">Stats</a>
-    </nav>`
+      ${createMenuTemplate(currentTab)}
+      </nav>
+    </div>`
   );
 };
 
-export default class Menu extends AbstractView {
+export default class Menu extends SmartView {
+  constructor(initTab) {
+    super();
+    this._item = initTab;
+
+    this._menuClickHandler = this._menuClickHandler.bind(this);
+  }
+
+  setActiveTab(tab) {
+    this._item = tab;
+    this.updateElement();
+  }
+
+  restoreHandlers() {
+    this.setMenuClickHandler(this._callback.menuClick);
+  }
+
   getTemplate() {
-    return createMenuTemplate();
+    return createTripTabsTemplate(this._item);
+  }
+
+  _menuClickHandler(evt) {
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.menuClick(evt.target.dataset.tab);
+  }
+
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener(`click`, this._menuClickHandler);
   }
 }

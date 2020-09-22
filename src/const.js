@@ -72,3 +72,29 @@ export const UpdateType = {
   MAJOR: `MAJOR`,
 };
 
+export const StatisticsType = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPENT: `time spent`,
+};
+
+export const TabNavItem = {
+  TABLE: `Table`,
+  STATISTICS: `Statistics`
+};
+
+export const ModelType = {
+  DESTINATIONS: `Destinations`,
+  FILTER: `Filter`,
+  OFFERS: `Offers`,
+  MENU: `Menu`,
+  POINTS: `Points`,
+  NEW_POINT: `NewPoint`,
+};
+
+export const TabAdditionalItem = {
+  ADD_NEW_EVENT: `ADD_NEW_EVENT`,
+};
+
+export const MenuItem = Object.assign({}, TabNavItem, TabAdditionalItem);
+
