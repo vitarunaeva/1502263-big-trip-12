@@ -41,7 +41,7 @@ const createAvailableOffersTemplate = (offers, selectedOffers) => {
   return (
     `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.includes(singleOffer)))
+    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.some((selectedOffer) => selectedOffer.title === singleOffer.title)))
       .join(``)}
     </div>`
   );
@@ -77,8 +77,8 @@ const createConcreteDestinationTemplate = (destination) => {
     <p class="event__destination-description">${destination.description}</p>
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        ${destination.photos
-      .map((photoUrl) => (`<img class="event__photo" src="${photoUrl}" alt="Event photo">`))
+        ${destination.pictures
+      .map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`))
       .join(``)
     }
       </div>
@@ -161,7 +161,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${eventItem.price}" autocomplete="off">
+          <input class="event__input  event__input--price" id="event-price" type="number" min="0" name="event-price" value="${eventItem.price}" autocomplete="off">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         ${createResetButtonTemplate(eventItem.id)}

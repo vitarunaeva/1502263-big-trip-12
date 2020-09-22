@@ -23,7 +23,7 @@ export const POSTFIX_TYPE = {
 
 export const MAX_OFFERS = 3;
 
-export const POINT_ID = 0;
+export const POINT_ID = null;
 
 export const SORT_TYPE = {
   EVENT: `event`,
@@ -70,6 +70,8 @@ export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
+  INIT: `INIT`,
+  CRASH: `CRASH`
 };
 
 export const StatisticsType = {
@@ -97,4 +99,11 @@ export const TabAdditionalItem = {
 };
 
 export const MenuItem = Object.assign({}, TabNavItem, TabAdditionalItem);
+
+export const MessageText = {
+  CRASH: `Oops, something went wrong. Try again later`,
+  NO_POINTS: `Click New Event to create your first point`,
+  LOADING: `Loading...`
+};
+
 
