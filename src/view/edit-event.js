@@ -184,7 +184,7 @@ export default class EventEditor extends SmartView {
   constructor(destinations = [], tripOffers = [], eventItem = NEW_EVENT) {
     super();
 
-    this._offers = tripOffers.find((offer) => eventItem.type === offer.eventType);
+    this._offers = tripOffers.find((offer) => eventItem.type.toLowerCase() === offer.type);
 
     this._eventItem = eventItem;
     this._sourceEventItem = eventItem;
@@ -310,7 +310,7 @@ export default class EventEditor extends SmartView {
 
     const selectedEventType = evt.target.dataset.type;
 
-    this._offerList = this._allOffers.find((offer) => selectedEventType === offer.eventType).offers;
+    this._offerList = this._allOffers.find((offer) => selectedEventType.toLowerCase() === offer.type).offers;
 
     if (selectedEventType === this._eventItem.type) {
       this.getElement().querySelector(`.event__type-btn`).click();
