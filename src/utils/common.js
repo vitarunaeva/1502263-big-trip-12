@@ -4,6 +4,10 @@ const addLeadZero = (digit) => {
   return digit < 10 ? `0` + digit : digit;
 };
 
+export const toFirstUpperLetter = (word) => {
+  return word[0].toUpperCase() + word.slice(1, word.length);
+};
+
 export const humanizeDuration = (finishDate, startDate) => {
   const startMoment = moment(finishDate)
     .subtract(finishDate.getSeconds(), `seconds`)

@@ -25,6 +25,7 @@ export default class NewPoint {
 
     this._editorComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._editorComponent.setDatePicker();
 
     render(this._pointContainer, this._editorComponent, RenderPosition.AFTERBEGIN);
 

@@ -4,6 +4,7 @@ import SmartView from '../abstract/smart-view.js';
 import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, NEW_EVENT, State} from '../const.js';
 import {eventTypePostfix, defineDestination, isPendingState} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import {toFirstUpperLetter} from "../utils/common";
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -12,7 +13,7 @@ const createEventTypesTemplate = (selectedType) => {
         <label class="event__type-label  event__type-label--${type.toLowerCase()}"
                for="event-type-${type}"
                data-type="${type}">
-         ${type}
+         ${toFirstUpperLetter(type)}
         </label>
       </div>`)).join(``);
 };
@@ -165,7 +166,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList, editSt
         </div>
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination">
-            ${eventItem.type} ${eventTypePostfix(eventItem.type)}
+            ${toFirstUpperLetter(eventItem.type)} ${eventTypePostfix(eventItem.type)}
           </label>
             <select class="event__input  event__input--destination" id="event-destination" name="event-destination" ${isInterfaceDisabled ? `disabled` : ``}>
             <datalist id="destination-list">
@@ -419,8 +420,8 @@ export default class EventEditor extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this.setEditState(State.SAVING);
     this._defineSelectedOffers();
+    this.setEditState(State.SAVING);
     this._destroyDatePickers();
     this._callback.formSubmit(this._eventItem);
   }
@@ -428,6 +429,8 @@ export default class EventEditor extends SmartView {
   updateData(updatedData, justDataUpdating) {
     super.updateData(updatedData, justDataUpdating);
     this._eventItem = Object.assign({}, this._eventItem, this._data);
+    this._sourceItem.isFavorite = this._eventItem.isFavorite;
+    this.updateElement();
   }
 
   setFavoriteClickHandler(callback) {
@@ -437,6 +440,7 @@ export default class EventEditor extends SmartView {
 
   setCancelClickHandler(callback) {
     this._callback.cancelClick = callback;
+    this._destroyDatePickers();
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._cancelClickHandler);
   }
 
@@ -449,6 +453,7 @@ export default class EventEditor extends SmartView {
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
+    this._destroyDatePickers();
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
