@@ -202,11 +202,11 @@ export default class EventEditor extends SmartView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._cancelClickHandler = this._cancelClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._startChangeHandler = this._startChangeHandler.bind(this);
+    this._endChangeHandler = this._endChangeHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatePicker();
   }
 
   removeElement() {
