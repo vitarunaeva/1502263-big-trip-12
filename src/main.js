@@ -7,7 +7,7 @@ import StatisticsPresenter from './presenter/statistics.js';
 import {ModelType, UpdateType} from './const.js';
 
 
-const AUTHORIZATION = `Basic c1a054440a4cd`;
+const AUTHORIZATION = `Basic c100a054440a4hs`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const api = new Api(END_POINT, AUTHORIZATION);

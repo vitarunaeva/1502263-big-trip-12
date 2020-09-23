@@ -6,6 +6,7 @@ import NewPointPresenter from './new-point.js';
 import {getSorterRule, groupEvents, convertToNullableDate, getFilterRule} from '../utils/trip.js';
 import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem, MessageText} from '../const.js';
 import {remove, render} from '../utils/render.js';
+import {State as EventPresenterState} from "../const";
 
 export default class Event {
   constructor(tripEventsContainer, modelStore, api) {
@@ -60,6 +61,7 @@ export default class Event {
       return;
     }
 
+    this._handleModeChange();
     this._currentSortType = SORT_TYPE.EVENT;
     for (const point of Object.values(this._pointStorage)) {
       point.replaceEditFormToPoint();
@@ -95,15 +97,31 @@ export default class Event {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._api.updatePoint(update).then((response) => {
-          this._pointsModel.updateItem(updateType, response);
-        });
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.updateItem(updateType, response);
+          })
+          .catch(() => {
+            this._pointStorage[update.id].setViewState(EventPresenterState.ABORTED);
+          });
         break;
       case UserAction.ADD_POINT:
-        this._pointsModel.addItem(updateType, update);
+        this._api.addPoint(update)
+          .then((response) => {
+            this._pointsModel.addItem(updateType, response);
+          })
+          .catch(() => {
+            this._newPointPresenter.setAborting();
+          });
         break;
       case UserAction.DELETE_POINT:
-        this._pointsModel.deleteItem(updateType, update);
+        this._api.deletePoint(update)
+          .then(() => {
+            this._pointsModel.deleteItem(updateType, update);
+          })
+          .catch(() => {
+            this._pointStorage[update.id].setViewState(EventPresenterState.ABORTED);
+          });
         break;
     }
   }

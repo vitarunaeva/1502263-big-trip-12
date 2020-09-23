@@ -1,7 +1,7 @@
 import moment from 'moment';
 import AbstractView from '../abstract/simple-view.js';
 import {eventTypePostfix} from '../utils/trip.js';
-import {humanizeDuration} from '../utils/common.js';
+import {humanizeDuration, toFirstUpperLetter} from '../utils/common.js';
 import {MAX_OFFERS} from '../const';
 
 const createOfferItemTemplate = ({title, price}) => {
@@ -36,7 +36,7 @@ const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${event.type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${event.type} ${eventTypePostfix(event.type)} ${event.destination.name}</h3>
+        <h3 class="event__title">${toFirstUpperLetter(event.type)} ${eventTypePostfix(event.type)} ${event.destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime=${moment(event.startDate).format(`YYYY-MM-DD[T]HH:mm`)}>

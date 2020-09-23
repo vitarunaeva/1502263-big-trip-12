@@ -1,9 +1,10 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 import SmartView from '../abstract/smart-view.js';
-import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, NEW_EVENT} from '../const.js';
-import {eventTypePostfix, defineDestination} from '../utils/trip.js';
+import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, NEW_EVENT, State} from '../const.js';
+import {eventTypePostfix, defineDestination, isPendingState} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import {toFirstUpperLetter} from "../utils/common";
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -12,7 +13,7 @@ const createEventTypesTemplate = (selectedType) => {
         <label class="event__type-label  event__type-label--${type.toLowerCase()}"
                for="event-type-${type}"
                data-type="${type}">
-         ${type}
+         ${toFirstUpperLetter(type)}
         </label>
       </div>`)).join(``);
 };
@@ -33,7 +34,7 @@ const createDestinationItemsTemplate = (destinations, currentDestination, pointI
   return destinationOptions.join(``);
 };
 
-const createAvailableOffersTemplate = (offers, selectedOffers) => {
+const createAvailableOffersTemplate = (offers, selectedOffers, isDisabled) => {
   if (!offers.length) {
     return ``;
   }
@@ -41,13 +42,13 @@ const createAvailableOffersTemplate = (offers, selectedOffers) => {
   return (
     `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.some((selectedOffer) => selectedOffer.title === singleOffer.title)))
+    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.some((selectedOffer) => selectedOffer.title === singleOffer.title), isDisabled))
       .join(``)}
     </div>`
   );
 };
 
-const createOfferItemTemplate = (offer, isChecked) => {
+const createOfferItemTemplate = (offer, isChecked, isDisabled) => {
   const normalizedOfferId = offer.title.replace(/\s/g, `-`).toLowerCase();
 
   return (
@@ -57,6 +58,7 @@ const createOfferItemTemplate = (offer, isChecked) => {
              type="checkbox"
              name="event-offer-${normalizedOfferId}"
              value="${offer.title}"
+              ${isDisabled ? `disabled` : ``}
              ${isChecked ? `checked` : ``}>
       <label class="event__offer-label" for="event-offer-${normalizedOfferId}">
       <span class="event__offer-title">${offer.title}</span>
@@ -86,8 +88,31 @@ const createConcreteDestinationTemplate = (destination) => {
   );
 };
 
-const createResetButtonTemplate = (pointId) => {
-  return `<button class="event__reset-btn" type="reset">${pointId === POINT_ID ? `Cancel` : `Delete`}</button>`;
+const createSubmitButtonTemplate = (isDisabled, editState) => {
+  return (
+    `<button class="event__save-btn  btn  btn--blue" type="submit"
+      ${isDisabled ? `disabled` : ``}
+    >
+      ${editState === State.SAVING ? `Saving...` : `Save`}
+    </button>`
+  );
+};
+
+const createResetButtonTemplate = (pointId, isDisabled, editState) => {
+  let buttonLabel = `Delete`;
+
+  if (pointId === POINT_ID) {
+    buttonLabel = `Cancel`;
+  }
+
+  if (editState === State.DELETING) {
+    buttonLabel = `Deleting...`;
+  }
+  return (
+    `<button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>
+      ${buttonLabel}
+    </button>`
+  );
 };
 
 const createFavoriteButtonTemplate = (pointId, isFavoriteEvent) => {
@@ -114,7 +139,10 @@ const createRollupButtonTemplate = (pointId) => {
   </button>`;
 };
 
-const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
+const createEditTripEventTemplate = (eventItem, destinations, offersList, editState) => {
+  const isInterfaceDisabled = isPendingState(editState);
+  const isSubmitDisabled = isNaN(eventItem.price) || eventItem.destination.name === `` || isInterfaceDisabled;
+
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -123,7 +151,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${eventItem.type.toLowerCase()}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox"  ${isInterfaceDisabled ? `disabled` : ``}>
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
@@ -137,9 +165,9 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
         </div>
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination">
-            ${eventItem.type} ${eventTypePostfix(eventItem.type)}
+            ${toFirstUpperLetter(eventItem.type)} ${eventTypePostfix(eventItem.type)}
           </label>
-          <select class="event__input  event__input--destination" id="event-destination" name="event-destination" >
+            <select class="event__input  event__input--destination" id="event-destination" name="event-destination" ${isInterfaceDisabled ? `disabled` : ``}>
             <datalist id="destination-list">
               ${createDestinationItemsTemplate(destinations, eventItem.destination, eventItem.id)}
             </datalist>
@@ -149,28 +177,28 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
           <label class="visually-hidden" for="event-start-time">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${moment(eventItem.startDate).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${moment(eventItem.startDate).format(`DD/MM/YY HH:mm`)}" ${isInterfaceDisabled ? `disabled` : ``}">
           —
           <label class="visually-hidden" for="event-end-time">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${moment(eventItem.endDate).format(`DD/MM/YY HH:mm`)}">
+          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${moment(eventItem.endDate).format(`DD/MM/YY HH:mm`)}" ${isInterfaceDisabled ? `disabled` : ``}">
         </div>
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price">
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="number" min="0" name="event-price" value="${eventItem.price}" autocomplete="off">
+          <input class="event__input  event__input--price" id="event-price" type="number" min="0" name="event-price" value="${eventItem.price}" autocomplete="off" ${isInterfaceDisabled ? `disabled` : ``}">
         </div>
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        ${createResetButtonTemplate(eventItem.id)}
+        ${createSubmitButtonTemplate(isSubmitDisabled, editState)}
+        ${createResetButtonTemplate(eventItem.id, isInterfaceDisabled, editState)}
         ${createFavoriteButtonTemplate(eventItem.id, eventItem.isFavorite)}
         ${createRollupButtonTemplate(eventItem.id)}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
-          ${createAvailableOffersTemplate(offersList, eventItem.offers)}
+          ${createAvailableOffersTemplate(offersList, eventItem.offers, isInterfaceDisabled)}
         </section>
         <section class="event__section  event__section--destination">
           ${createConcreteDestinationTemplate(eventItem.destination)}
@@ -195,6 +223,7 @@ export default class EventEditor extends SmartView {
     this._offerList = this._offers ? this._offers.offers : [];
     this._datepickers = null;
 
+    this._editState = State.DEFAULT;
 
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._typeClickHandler = this._typeClickHandler.bind(this);
@@ -219,11 +248,17 @@ export default class EventEditor extends SmartView {
   }
 
   reset() {
+    this._editState = State.DEFAULT;
     this.updateData(this._sourceItem);
   }
 
   getTemplate() {
-    return createEditTripEventTemplate(this._eventItem, this._destinations, this._offerList);
+    return createEditTripEventTemplate(this._eventItem, this._destinations, this._offerList, this._editState);
+  }
+
+  setEditState(state) {
+    this._editState = state;
+    this.updateElement();
   }
 
   restoreHandlers() {
@@ -385,6 +420,7 @@ export default class EventEditor extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._defineSelectedOffers();
+    this.setEditState(State.SAVING);
     this._destroyDatePickers();
     this._callback.formSubmit(this._eventItem);
   }
@@ -392,6 +428,8 @@ export default class EventEditor extends SmartView {
   updateData(updatedData, justDataUpdating) {
     super.updateData(updatedData, justDataUpdating);
     this._eventItem = Object.assign({}, this._eventItem, this._data);
+    this._sourceItem.isFavorite = this._eventItem.isFavorite;
+    this.updateElement();
   }
 
   setFavoriteClickHandler(callback) {
@@ -401,17 +439,20 @@ export default class EventEditor extends SmartView {
 
   setCancelClickHandler(callback) {
     this._callback.cancelClick = callback;
+    this._destroyDatePickers();
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._cancelClickHandler);
   }
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
     this._destroyDatePickers();
+    this.setEditState(State.DELETING);
     this._callback.deleteClick();
   }
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
+    this._destroyDatePickers();
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 

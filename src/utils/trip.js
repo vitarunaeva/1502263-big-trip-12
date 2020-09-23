@@ -91,3 +91,5 @@ export const defineDestination = (destinations, selectedCity) => {
 
   return {name: selectedCity};
 };
+
+export const isPendingState = (editState) => (editState < 0);

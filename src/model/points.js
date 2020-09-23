@@ -39,7 +39,6 @@ export default class Points extends Fetchable(Observable(SimpleCollection)) {
   static adaptToClient(point) {
     return Object.assign(
         {},
-        point,
         {
           id: point.id,
           type: point.type,
@@ -57,7 +56,6 @@ export default class Points extends Fetchable(Observable(SimpleCollection)) {
   static adaptToServer(point) {
     return Object.assign(
         {},
-        point,
         {
           "id": point.id,
           "type": point.type,

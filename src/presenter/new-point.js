@@ -1,4 +1,3 @@
-import {nanoid} from 'nanoid';
 import EventEditorView from '../view/edit-event.js';
 import {remove, render} from '../utils/render.js';
 import {UserAction, UpdateType, RenderPosition, ModelType} from '../const.js';
@@ -25,6 +24,7 @@ export default class NewPoint {
 
     this._editorComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._editorComponent.setDatePicker();
 
     render(this._pointContainer, this._editorComponent, RenderPosition.AFTERBEGIN);
 
@@ -44,13 +44,23 @@ export default class NewPoint {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._editorComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this._editorComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MAJOR,
-        Object.assign({}, point, {id: nanoid(5)})
+        point
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {
