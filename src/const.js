@@ -107,3 +107,11 @@ export const MessageText = {
 };
 
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  DEFAULT: `DEFAULT`,
+  ABORTED: `ABORTED`,
+  SUCCEED: `SUCCEED`,
+};
+

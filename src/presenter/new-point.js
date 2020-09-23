@@ -44,13 +44,30 @@ export default class NewPoint {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
   }
 
+  setSaving() {
+    this._editorComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._editorComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this._editorComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MAJOR,
-        Object.assign({}, point, {id: nanoid(5)})
+        point
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {

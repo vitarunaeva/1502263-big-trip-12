@@ -1,6 +1,6 @@
 import EventEditorView from "../view/edit-event";
 import EventPointView from "../view/event";
-import {RenderPosition, PointMode, UserAction, UpdateType} from '../const.js';
+import {RenderPosition, PointMode, UserAction, UpdateType, State} from '../const.js';
 import {render, replace, remove} from '../utils/render.js';
 
 export default class Point {
@@ -49,7 +49,8 @@ export default class Point {
     }
 
     if (this._mode === PointMode.EDITING) {
-      replace(this._editorComponent, prevEditorComponent);
+      replace(this._pointComponent, prevEditorComponent);
+      this._mode = PointMode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -74,6 +75,35 @@ export default class Point {
     replace(this._pointComponent, this._editorComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = PointMode.DEFAULT;
+  }
+
+  setViewState() {
+    const resetFormState = () => {
+      this._editorComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._editorComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._editorComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTED:
+        this._pointComponent.shake(resetFormState);
+        this._editorComponent.shake(resetFormState);
+        break;
+    }
   }
 
   _replacePointToEditor() {
