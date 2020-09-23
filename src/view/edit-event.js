@@ -41,7 +41,7 @@ const createAvailableOffersTemplate = (offers, selectedOffers) => {
   return (
     `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.includes(singleOffer)))
+    ${offers.map((singleOffer) => createOfferItemTemplate(singleOffer, selectedOffers.some((selectedOffer) => selectedOffer.title === singleOffer.title)))
       .join(``)}
     </div>`
   );
@@ -77,8 +77,8 @@ const createConcreteDestinationTemplate = (destination) => {
     <p class="event__destination-description">${destination.description}</p>
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        ${destination.photos
-      .map((photoUrl) => (`<img class="event__photo" src="${photoUrl}" alt="Event photo">`))
+        ${destination.pictures
+      .map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`))
       .join(``)
     }
       </div>
@@ -161,7 +161,7 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${eventItem.price}" autocomplete="off">
+          <input class="event__input  event__input--price" id="event-price" type="number" min="0" name="event-price" value="${eventItem.price}" autocomplete="off">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         ${createResetButtonTemplate(eventItem.id)}
@@ -184,10 +184,12 @@ export default class EventEditor extends SmartView {
   constructor(destinations = [], tripOffers = [], eventItem = NEW_EVENT) {
     super();
 
-    this._offers = tripOffers.find((offer) => eventItem.type === offer.eventType);
+    this._offers = tripOffers.find((offer) => eventItem.type.toLowerCase() === offer.type);
 
     this._eventItem = eventItem;
-    this._sourceEventItem = eventItem;
+    this._sourceItem = JSON.parse(JSON.stringify(eventItem));
+    this._sourceItem.startDate = new Date(this._sourceItem.startDate);
+    this._sourceItem.endDate = new Date(this._sourceItem.endDate);
     this._destinations = destinations;
     this._allOffers = [...tripOffers];
     this._offerList = this._offers ? this._offers.offers : [];
@@ -200,11 +202,11 @@ export default class EventEditor extends SmartView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._cancelClickHandler = this._cancelClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._startChangeHandler = this._startChangeHandler.bind(this);
+    this._endChangeHandler = this._endChangeHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatePicker();
   }
 
   removeElement() {
@@ -217,7 +219,7 @@ export default class EventEditor extends SmartView {
   }
 
   reset() {
-    this.updateData(this._sourceEventItem);
+    this.updateData(this._sourceItem);
   }
 
   getTemplate() {
@@ -226,7 +228,6 @@ export default class EventEditor extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatePicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
 
@@ -250,11 +251,15 @@ export default class EventEditor extends SmartView {
       .addEventListener(`change`, this._destinationInputHandler);
   }
 
-  _setDatePicker() {
+  _destroyDatePickers() {
     if (this._datepickers) {
       this._datepickers.forEach((item) => item.destroy());
       this._datepickers = null;
     }
+  }
+
+  setDatePicker() {
+    this._destroyDatePickers();
 
     const eventStartDate = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
@@ -264,7 +269,7 @@ export default class EventEditor extends SmartView {
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._eventItem.startDate,
-          onChange: this._dateChangeHandler
+          onChange: this._startChangeHandler
         }
     );
 
@@ -277,18 +282,23 @@ export default class EventEditor extends SmartView {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._eventItem.endDate,
           minDate: this._eventItem.startDate,
-          onChange: this._dateChangeHandler
+          onChange: this._endChangeHandler
         }
     );
 
     this._datepickers = [eventStartDate, eventEndDate];
   }
 
-  _dateChangeHandler([selectedDate], dateTime) {
+  _startChangeHandler([selectedDate]) {
     if (selectedDate) {
-      const updatedProperty = Object.create(null);
-      updatedProperty[dateTime] = selectedDate;
-      this.updateData(updatedProperty, true);
+      this._eventItem.startDate = new Date(selectedDate);
+    }
+  }
+
+
+  _endChangeHandler([selectedDate]) {
+    if (selectedDate) {
+      this._eventItem.endDate = new Date(selectedDate);
     }
   }
 
@@ -310,7 +320,7 @@ export default class EventEditor extends SmartView {
 
     const selectedEventType = evt.target.dataset.type;
 
-    this._offerList = this._allOffers.find((offer) => selectedEventType === offer.eventType).offers;
+    this._offerList = this._allOffers.find((offer) => selectedEventType.toLowerCase() === offer.type).offers;
 
     if (selectedEventType === this._eventItem.type) {
       this.getElement().querySelector(`.event__type-btn`).click();
@@ -362,20 +372,20 @@ export default class EventEditor extends SmartView {
     evt.preventDefault();
     this.reset();
     this._callback.cancelClick();
+    this._destroyDatePickers();
   }
 
   _favoriteClickHandler() {
     this.updateData({
-      isFavorite: !this._sourceItem.isFavorite
-    }, true);
-    this._sourceItem = this._eventItem;
+      isFavorite: !this._eventItem.isFavorite
+    });
     this._callback.favoriteClick(this._eventItem);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._defineSelectedOffers();
-    this._sourceItem = this._eventItem;
+    this._destroyDatePickers();
     this._callback.formSubmit(this._eventItem);
   }
 
@@ -396,6 +406,7 @@ export default class EventEditor extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
+    this._destroyDatePickers();
     this._callback.deleteClick();
   }
 

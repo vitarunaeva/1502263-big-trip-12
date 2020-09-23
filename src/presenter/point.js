@@ -78,6 +78,7 @@ export default class Point {
 
   _replacePointToEditor() {
     replace(this._editorComponent, this._pointComponent);
+    this._editorComponent.setDatePicker();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = PointMode.EDITING;
@@ -96,6 +97,7 @@ export default class Point {
   }
 
   _handleCancelClick() {
+    this._editorComponent.reset();
     this.replaceEditFormToPoint();
   }
 
@@ -109,6 +111,5 @@ export default class Point {
 
   _handleFormSubmit(updatedPoint) {
     this._changeData(UserAction.UPDATE_POINT, UpdateType.MINOR, updatedPoint);
-    this._replacePointToEditor();
   }
 }

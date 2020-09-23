@@ -1,17 +1,17 @@
 export const MOVE_TYPE = {
-  TAXI: `Taxi`,
-  BUS: `Bus`,
-  TRAIN: `Train`,
-  SHIP: `Ship`,
-  TRANSPORT: `Transport`,
-  DRIVE: `Drive`,
-  FLIGHT: `Flight`,
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
 };
 
 export const ACTIVITY_TYPE = {
-  CHECK_IN: `Check-in`,
-  SIGHTSEEING: `Sightseeing`,
-  RESTAURANT: `Restaurant`,
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`,
 };
 
 export const EVENT_TYPE = Object.assign({}, MOVE_TYPE, ACTIVITY_TYPE);
@@ -23,7 +23,7 @@ export const POSTFIX_TYPE = {
 
 export const MAX_OFFERS = 3;
 
-export const POINT_ID = 0;
+export const POINT_ID = null;
 
 export const SORT_TYPE = {
   EVENT: `event`,
@@ -70,6 +70,8 @@ export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
+  INIT: `INIT`,
+  CRASH: `CRASH`
 };
 
 export const StatisticsType = {
@@ -97,4 +99,11 @@ export const TabAdditionalItem = {
 };
 
 export const MenuItem = Object.assign({}, TabNavItem, TabAdditionalItem);
+
+export const MessageText = {
+  CRASH: `Oops, something went wrong. Try again later`,
+  NO_POINTS: `Click New Event to create your first point`,
+  LOADING: `Loading...`
+};
+
 
