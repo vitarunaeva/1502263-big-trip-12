@@ -187,7 +187,9 @@ export default class EventEditor extends SmartView {
     this._offers = tripOffers.find((offer) => eventItem.type.toLowerCase() === offer.type);
 
     this._eventItem = eventItem;
-    this._sourceEventItem = eventItem;
+    this._sourceItem = JSON.parse(JSON.stringify(eventItem));
+    this._sourceItem.startDate = new Date(this._sourceItem.startDate);
+    this._sourceItem.endDate = new Date(this._sourceItem.endDate);
     this._destinations = destinations;
     this._allOffers = [...tripOffers];
     this._offerList = this._offers ? this._offers.offers : [];
@@ -217,7 +219,7 @@ export default class EventEditor extends SmartView {
   }
 
   reset() {
-    this.updateData(this._sourceEventItem);
+    this.updateData(this._sourceItem);
   }
 
   getTemplate() {
@@ -226,7 +228,6 @@ export default class EventEditor extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatePicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
 
@@ -250,11 +251,15 @@ export default class EventEditor extends SmartView {
       .addEventListener(`change`, this._destinationInputHandler);
   }
 
-  _setDatePicker() {
+  _destroyDatePickers() {
     if (this._datepickers) {
       this._datepickers.forEach((item) => item.destroy());
       this._datepickers = null;
     }
+  }
+
+  setDatePicker() {
+    this._destroyDatePickers();
 
     const eventStartDate = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
@@ -264,7 +269,7 @@ export default class EventEditor extends SmartView {
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._eventItem.startDate,
-          onChange: this._dateChangeHandler
+          onChange: this._startChangeHandler
         }
     );
 
@@ -277,18 +282,23 @@ export default class EventEditor extends SmartView {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._eventItem.endDate,
           minDate: this._eventItem.startDate,
-          onChange: this._dateChangeHandler
+          onChange: this._endChangeHandler
         }
     );
 
     this._datepickers = [eventStartDate, eventEndDate];
   }
 
-  _dateChangeHandler([selectedDate], dateTime) {
+  _startChangeHandler([selectedDate]) {
     if (selectedDate) {
-      const updatedProperty = Object.create(null);
-      updatedProperty[dateTime] = selectedDate;
-      this.updateData(updatedProperty, true);
+      this._eventItem.startDate = new Date(selectedDate);
+    }
+  }
+
+
+  _endChangeHandler([selectedDate]) {
+    if (selectedDate) {
+      this._eventItem.endDate = new Date(selectedDate);
     }
   }
 
@@ -362,20 +372,20 @@ export default class EventEditor extends SmartView {
     evt.preventDefault();
     this.reset();
     this._callback.cancelClick();
+    this._destroyDatePickers();
   }
 
   _favoriteClickHandler() {
     this.updateData({
-      isFavorite: !this._sourceItem.isFavorite
-    }, true);
-    this._sourceItem = this._eventItem;
+      isFavorite: !this._eventItem.isFavorite
+    });
     this._callback.favoriteClick(this._eventItem);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._defineSelectedOffers();
-    this._sourceItem = this._eventItem;
+    this._destroyDatePickers();
     this._callback.formSubmit(this._eventItem);
   }
 
@@ -396,6 +406,7 @@ export default class EventEditor extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
+    this._destroyDatePickers();
     this._callback.deleteClick();
   }
 
