@@ -77,7 +77,7 @@ export default class Point {
     this._mode = PointMode.DEFAULT;
   }
 
-  setViewState() {
+  setViewState(state) {
     const resetFormState = () => {
       this._editorComponent.updateData({
         isDisabled: false,

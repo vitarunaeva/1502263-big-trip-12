@@ -4,7 +4,7 @@ import EventMsgView from '../view/event-msg.js';
 import PointPresenter from './point.js';
 import NewPointPresenter from './new-point.js';
 import {getSorterRule, groupEvents, convertToNullableDate, getFilterRule} from '../utils/trip.js';
-import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem, MessageText }from '../const.js';
+import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem, MessageText} from '../const.js';
 import {remove, render} from '../utils/render.js';
 import {State as EventPresenterState} from "../const";
 

@@ -141,7 +141,6 @@ const createRollupButtonTemplate = (pointId) => {
 
 const createEditTripEventTemplate = (eventItem, destinations, offersList, editState) => {
   const isInterfaceDisabled = isPendingState(editState);
-  const priceValue = isNaN(eventItem.price) ? `` : eventItem.price;
   const isSubmitDisabled = isNaN(eventItem.price) || eventItem.destination.name === `` || isInterfaceDisabled;
 
   return (
@@ -298,28 +297,28 @@ export default class EventEditor extends SmartView {
     this._destroyDatePickers();
 
     const eventStartDate = flatpickr(
-      this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-      {
-        enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
-        dateFormat: `d/m/y H:i`,
-        defaultDate: this._eventItem.startDate,
-        onChange: this._startChangeHandler
-      }
+        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+        {
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._eventItem.startDate,
+          onChange: this._startChangeHandler
+        }
     );
 
     const eventEndDate = flatpickr(
-      this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
-      {
-        enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
-        dateFormat: `d/m/y H:i`,
-        defaultDate: this._eventItem.endDate,
-        minDate: this._eventItem.startDate,
-        onChange: this._endChangeHandler
-      }
+        this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
+        {
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._eventItem.endDate,
+          minDate: this._eventItem.startDate,
+          onChange: this._endChangeHandler
+        }
     );
 
     this._datepickers = [eventStartDate, eventEndDate];

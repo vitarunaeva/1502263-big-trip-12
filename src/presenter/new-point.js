@@ -1,4 +1,3 @@
-import {nanoid} from 'nanoid';
 import EventEditorView from '../view/edit-event.js';
 import {remove, render} from '../utils/render.js';
 import {UserAction, UpdateType, RenderPosition, ModelType} from '../const.js';
@@ -43,13 +42,6 @@ export default class NewPoint {
 
     document.removeEventListener(`keydown`, this._handleEscKeyDown);
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
-  }
-
-  setSaving() {
-    this._editorComponent.updateData({
-      isDisabled: true,
-      isSaving: true,
-    });
   }
 
   setAborting() {
