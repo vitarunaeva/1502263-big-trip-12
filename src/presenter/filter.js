@@ -1,6 +1,6 @@
 import EventFilterView from '../view/filter.js';
 import {render, replace, remove} from '../utils/render.js';
-import {UpdateType, RenderPosition, FILTER_TYPE, ModelType} from '../const.js';
+import {UpdateType, RenderPosition, FilterType, ModelType} from '../const.js';
 import {getFilterRule} from '../utils/trip.js';
 
 export default class Filter {
@@ -63,7 +63,7 @@ export default class Filter {
     let filters = {};
 
     Object
-      .values(FILTER_TYPE)
+      .values(FilterType)
       .forEach((filterTitle) => {
         const isFilteredEventsExist = points.some(getFilterRule(filterTitle));
         filters[filterTitle] = isFilteredEventsExist;

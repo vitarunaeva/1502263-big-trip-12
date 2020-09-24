@@ -1,4 +1,4 @@
-import {StatisticsType, MOVE_TYPE} from '../const';
+import {StatisticsType, MoveType} from '../const';
 import moment from 'moment';
 
 const extractValue = (event, statisticsType) => {
@@ -9,7 +9,7 @@ const extractValue = (event, statisticsType) => {
       result += event.price;
       break;
     case StatisticsType.TRANSPORT:
-      if (Object.values(MOVE_TYPE).includes(event.type)) {
+      if (Object.values(MoveType).includes(event.type)) {
         result++;
       } else {
         result = null;

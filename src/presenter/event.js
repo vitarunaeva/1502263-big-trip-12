@@ -4,7 +4,7 @@ import EventMsgView from '../view/event-msg.js';
 import PointPresenter from './point.js';
 import NewPointPresenter from './new-point.js';
 import {getSorterRule, groupEvents, convertToNullableDate, getFilterRule} from '../utils/trip.js';
-import {RenderPosition, UpdateType, UserAction, FILTER_TYPE, SORT_TYPE, ModelType, TabNavItem, MessageText} from '../const.js';
+import {RenderPosition, UpdateType, UserAction, FilterType, SortType, ModelType, TabNavItem, MessageText} from '../const.js';
 import {remove, render} from '../utils/render.js';
 import {State as EventPresenterState} from "../const";
 
@@ -19,7 +19,7 @@ export default class Event {
     this._tripOffersModel = modelStore.get(ModelType.OFFERS);
     this._destinationsModel = modelStore.get(ModelType.DESTINATIONS);
 
-    this._currentSortType = SORT_TYPE.EVENT;
+    this._currentSortType = SortType.EVENT;
     this._dayStorage = Object.create(null);
     this._pointStorage = Object.create(null);
     this._eventSorterComponent = null;
@@ -62,7 +62,7 @@ export default class Event {
     }
 
     this._handleModeChange();
-    this._currentSortType = SORT_TYPE.EVENT;
+    this._currentSortType = SortType.EVENT;
     for (const point of Object.values(this._pointStorage)) {
       point.replaceEditFormToPoint();
     }
@@ -135,7 +135,7 @@ export default class Event {
         this._renderEvents(this._getPoints());
         break;
       case UpdateType.MAJOR:
-        const resetSortType = Object.values(FILTER_TYPE).includes(payload);
+        const resetSortType = Object.values(FilterType).includes(payload);
         this._clearTripBoard({resetSortType});
         this._renderTripBoard();
         break;
@@ -172,7 +172,7 @@ export default class Event {
       return;
     }
 
-    if (sortType === SORT_TYPE.EVENT) {
+    if (sortType === SortType.EVENT) {
       this._eventSorterComponent._element.querySelector(`.trip-sort__item--day`).style.visibility = ``;
     } else {
       this._eventSorterComponent._element.querySelector(`.trip-sort__item--day`).style.visibility = `hidden`;
@@ -202,7 +202,7 @@ export default class Event {
   _renderEvents(sortedTripEvents) {
     const groupedEvents = groupEvents(this._currentSortType, sortedTripEvents);
 
-    if (this._currentSortType === SORT_TYPE.EVENT) {
+    if (this._currentSortType === SortType.EVENT) {
       Object.keys(groupedEvents).forEach((shortDay, dayIndex) => {
         const eventDay = convertToNullableDate(shortDay);
         const dayId = dayIndex + 1;
@@ -215,7 +215,7 @@ export default class Event {
           this._renderSinglePoint(pointContainer, tripEvent);
         });
       });
-    } else if (this._currentSortType === SORT_TYPE.TIME || this._currentSortType === SORT_TYPE.PRICE) {
+    } else if (this._currentSortType === SortType.TIME || this._currentSortType === SortType.PRICE) {
       const eventDayComponent = new TripDayView();
       this._dayStorage[0] = eventDayComponent;
       render(this._tripEventsContainer, eventDayComponent, RenderPosition.BEFOREEND);
@@ -260,7 +260,7 @@ export default class Event {
 
   _clearTripBoard({resetSortType} = {}) {
     if (resetSortType) {
-      this._currentSortType = SORT_TYPE.EVENT;
+      this._currentSortType = SortType.EVENT;
     }
 
     this._newPointPresenter.destroy();

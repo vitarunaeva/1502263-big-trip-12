@@ -2,7 +2,7 @@ import FilterPresenter from '../presenter/filter.js';
 import MenuView from '../view/menu.js';
 import EventAddButtonView from '../view/add-button';
 import {render} from '../utils/render.js';
-import {UpdateType, RenderPosition, ModelType, MenuItem, FILTER_TYPE} from '../const.js';
+import {UpdateType, RenderPosition, ModelType, MenuItem, FilterType} from '../const.js';
 
 export default class Menu {
   constructor(menuContainer, modelStore) {
@@ -62,8 +62,8 @@ export default class Menu {
   }
 
   _setActiveNavItem(tab) {
-    if (this._filterModel.getItem() !== FILTER_TYPE.EVERYTHING) {
-      this._filterModel.setItem(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
+    if (this._filterModel.getItem() !== FilterType.EVERYTHING) {
+      this._filterModel.setItem(UpdateType.MAJOR, FilterType.EVERYTHING);
     }
 
     if (this._menuModel.getItem().toLowerCase() === tab) {
