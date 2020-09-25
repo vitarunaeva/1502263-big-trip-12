@@ -1,10 +1,10 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import SmartView from '../abstract/smart-view.js';
 import {MoveType, ActivityType, POINT_ID, NEW_EVENT, State} from '../const.js';
 import {eventTypePostfix, defineDestination, isPendingState} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 import {toFirstUpperLetter} from "../utils/common";
+import SmartView from "./smart.js";
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (

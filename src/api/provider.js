@@ -93,7 +93,7 @@ export default class Provider {
     const localNewPointId = nanoid();
     const localNewPoint = Object.assign({}, point, {id: localNewPointId});
 
-    this._store.setItem(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
+    this._store.set(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
 
     return Promise.resolve(localNewPoint);
   }

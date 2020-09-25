@@ -1,11 +1,11 @@
 import EventEditorView from '../view/edit-event.js';
 import {remove, render} from '../utils/render.js';
-import {UserAction, UpdateType, RenderPosition, ModelType} from '../const.js';
+import {UserAction, UpdateType, RenderPosition} from '../const.js';
 
 export default class NewPoint {
-  constructor(pointContainer, modelStore, changeData) {
+  constructor(pointContainer, newPointModel, changeData) {
     this._pointContainer = pointContainer;
-    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
+    this._newPointModel = newPointModel;
     this._changeData = changeData;
 
     this._editorComponent = null;
@@ -38,7 +38,7 @@ export default class NewPoint {
 
     remove(this._editorComponent);
     this._editorComponent = null;
-    this._newPointModel.setItem(UpdateType.MINOR, null);
+    this._newPointModel.set(UpdateType.MINOR, null);
 
     document.removeEventListener(`keydown`, this._handleEscKeyDown);
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);

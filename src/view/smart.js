@@ -1,20 +1,20 @@
-import SimpleView from './simple-view.js';
+import Abstract from "./abstract.js";
 
-export default class SmartView extends SimpleView {
+export default class Smart extends Abstract {
   constructor() {
     super();
     this._data = {};
   }
 
-  updateData(updatedData, justDataUpdating) {
-    if (!updatedData) {
+  updateData(updatedItem, justDataUpdating) {
+    if (!updatedItem) {
       return;
     }
 
     this._data = Object.assign(
         {},
         this._data,
-        updatedData
+        updatedItem
     );
 
     if (justDataUpdating) {
@@ -32,12 +32,11 @@ export default class SmartView extends SimpleView {
     const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
-    prevElement = null;
 
     this.restoreHandlers();
   }
 
   restoreHandlers() {
-    throw new Error(`Abstract method not implemented: resetHandlers`);
+    throw new Error(`Abstract method not implemented: restoreHandlers`);
   }
 }

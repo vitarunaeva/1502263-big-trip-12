@@ -1,12 +1,12 @@
 import StatisticsView from '../view/statistics.js';
 import {render, remove} from '../utils/render.js';
-import {RenderPosition, ModelType, TabNavItem} from '../const.js';
+import {RenderPosition, TabNavItem} from '../const.js';
 
 export default class Statistics {
-  constructor(statisticsContainer, modelStore) {
+  constructor(statisticsContainer, pointsModel, menuModel) {
     this._statisticsContainer = statisticsContainer;
-    this._pointsModel = modelStore.get(ModelType.POINTS);
-    this._menuModel = modelStore.get(ModelType.MENU);
+    this._pointsModel = pointsModel;
+    this._menuModel = menuModel;
 
     this._statisticsComponent = null;
 
@@ -22,7 +22,7 @@ export default class Statistics {
       return;
     }
 
-    this._statisticsComponent = new StatisticsView(this._pointsModel.getItems());
+    this._statisticsComponent = new StatisticsView(this._pointsModel.get());
     render(this._statisticsContainer, this._statisticsComponent, RenderPosition.BEFOREBEGIN);
   }
 

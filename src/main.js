@@ -2,14 +2,19 @@ import EventPresenter from './presenter/event.js';
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
-import StoreFactory from './model/store-factore';
 import TripInfoPresenter from './presenter/trip-info.js';
 import MenuPresenter from './presenter/menu.js';
 import StatisticsPresenter from './presenter/statistics.js';
-import {ModelType, UpdateType} from './const.js';
+import {UpdateType} from './const.js';
+import Menu from "./model/menu";
+import Destinations from "./model/destinations";
+import Offers from "./model/offers";
+import Points from "./model/points";
+import NewPoint from "./model/new-point";
+import Filter from "./model/filter";
 
 
-const AUTHORIZATION = `Basic c100a054440a4hs`;
+const AUTHORIZATION = `Basic c100a0544rt4hs`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -20,7 +25,12 @@ const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
-const modelStore = StoreFactory.create();
+const menuModel = new Menu();
+const destinationsModel = new Destinations();
+const offersModel = new Offers();
+const pointsModel = new Points();
+const newPointModel = new NewPoint();
+const filterModel = new Filter();
 
 const bodyElement = document.querySelector(`.page-body`);
 const headerElement = bodyElement.querySelector(`.page-header`);
@@ -31,10 +41,10 @@ const mainElement = document.querySelector(`.page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const statisticsElement = mainElement.querySelector(`.page-body__container`);
 
-const tripInfoPresenter = new TripInfoPresenter(tripMainElement, modelStore);
-const menuPresenter = new MenuPresenter(tripMainElement, modelStore);
-const eventPresenter = new EventPresenter(tripEventsElement, modelStore, apiWithProvider);
-const statisticsPresenter = new StatisticsPresenter(statisticsElement, modelStore);
+const tripInfoPresenter = new TripInfoPresenter(tripMainElement, pointsModel);
+const menuPresenter = new MenuPresenter(tripMainElement, newPointModel, menuModel, filterModel, pointsModel);
+const eventPresenter = new EventPresenter(tripEventsElement, pointsModel, filterModel, newPointModel, menuModel, offersModel, destinationsModel, apiWithProvider);
+const statisticsPresenter = new StatisticsPresenter(statisticsElement, pointsModel, menuModel);
 
 tripInfoPresenter.init();
 eventPresenter.init();
@@ -48,13 +58,13 @@ const fetchedDataPromises = [
 
 Promise.all(fetchedDataPromises)
   .then(([destinations, offers, points]) => {
-    modelStore.get(ModelType.DESTINATIONS).setItems(destinations);
-    modelStore.get(ModelType.OFFERS).setItems(offers);
-    modelStore.get(ModelType.POINTS).setItems(UpdateType.INIT, points);
+    destinationsModel.set(destinations);
+    offersModel.set(offers);
+    pointsModel.set(UpdateType.INIT, points);
     menuPresenter.init();
   })
   .catch(() => {
-    modelStore.get(ModelType.POINTS).setItems(UpdateType.CRASH, []);
+    pointsModel.setItems(UpdateType.CRASH, []);
   });
 
 window.addEventListener(`load`, () => {

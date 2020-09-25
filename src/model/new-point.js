@@ -1,9 +1,13 @@
-import {ObserverDecorator as Observervable} from '../abstract/observer.js';
-import ActiveItem from '../abstract/active-item.js';
+import Observer from "../utils/observer.js";
 
-// eslint-disable-next-line new-cap
-export default class NewPoint extends Observervable(ActiveItem) {
+export default class NewPoint extends Observer {
   constructor() {
     super();
+  }
+
+  set(updateType, items) {
+    this._items = items.slice();
+
+    this._notify(updateType);
   }
 }

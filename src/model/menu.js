@@ -1,12 +1,19 @@
-import {ObserverDecorator as Observervable} from '../abstract/observer.js';
-import ActiveItem from '../abstract/active-item.js';
+import Observer from "../utils/observer.js";
 import {TabNavItem} from '../const.js';
 
-// eslint-disable-next-line new-cap
-export default class Menu extends Observervable(ActiveItem) {
+export default class Menu extends Observer {
   constructor() {
     super();
 
-    this._activeItem = TabNavItem.TABLE;
+    this._active = TabNavItem.TABLE;
+  }
+
+  set(updateType, menu) {
+    this._active = menu;
+    this._notify(updateType, menu);
+  }
+
+  get() {
+    return this._active;
   }
 }

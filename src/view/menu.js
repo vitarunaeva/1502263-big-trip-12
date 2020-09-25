@@ -1,4 +1,4 @@
-import SmartView from '../abstract/smart-view.js';
+import SmartView from './smart.js';
 import {TabNavItem} from '../const.js';
 
 const createMenuTemplate = (currentTab) => {

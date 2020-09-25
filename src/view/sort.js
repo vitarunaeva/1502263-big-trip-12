@@ -1,4 +1,4 @@
-import SmartView from '../abstract/smart-view.js';
+import SmartView from './smart.js';
 import {SortType} from '../const.js';
 
 const createEventSorterTemplate = (selectedSortType) => {

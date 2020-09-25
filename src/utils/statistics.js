@@ -51,7 +51,6 @@ export const calculateStat = (events, statisticsType) => {
 
   Object.keys(groupedEvents).forEach((statKey) => {
     groupedEvents[statKey] = roundResult(groupedEvents[statKey], statisticsType);
-    return;
   });
 
   return groupedEvents;

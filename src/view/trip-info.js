@@ -1,5 +1,5 @@
 import moment from 'moment';
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 import {getTotalEventPrice} from '../utils/trip.js';
 import {getSorterRule} from '../utils/trip.js';
 import {SortType} from '../const.js';

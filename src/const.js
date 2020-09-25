@@ -85,15 +85,6 @@ export const TabNavItem = {
   STATISTICS: `Statistics`
 };
 
-export const ModelType = {
-  DESTINATIONS: `Destinations`,
-  FILTER: `Filter`,
-  OFFERS: `Offers`,
-  MENU: `Menu`,
-  POINTS: `Points`,
-  NEW_POINT: `NewPoint`,
-};
-
 export const TabAdditionalItem = {
   ADD_NEW_EVENT: `ADD_NEW_EVENT`,
 };

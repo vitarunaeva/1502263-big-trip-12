@@ -1,4 +1,4 @@
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 
 export const createMsgTemplate = (msg) => {
   return (

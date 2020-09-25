@@ -1,13 +1,13 @@
 import EventFilterView from '../view/filter.js';
 import {render, replace, remove} from '../utils/render.js';
-import {UpdateType, RenderPosition, FilterType, ModelType} from '../const.js';
+import {UpdateType, RenderPosition, FilterType} from '../const.js';
 import {getFilterRule} from '../utils/trip.js';
 
 export default class Filter {
-  constructor(filterContainer, storeModel) {
+  constructor(filterContainer, filterModel, pointsModel) {
     this._filterContainer = filterContainer;
-    this._filterModel = storeModel.get(ModelType.FILTER);
-    this._pointsModel = storeModel.get(ModelType.POINTS);
+    this._filterModel = filterModel;
+    this._pointsModel = pointsModel;
     this._currentFilter = null;
 
     this._filterComponent = null;
@@ -20,7 +20,7 @@ export default class Filter {
 
   init() {
     const filters = this._getFilters();
-    this._currentFilter = this._filterModel.getItem();
+    this._currentFilter = this._filterModel.get();
 
     const prevFilterComponent = this._filterComponent;
 
@@ -28,7 +28,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent, RenderPosition);
       return;
     }
 
@@ -54,11 +54,11 @@ export default class Filter {
       return;
     }
 
-    this._filterModel.setItem(UpdateType.MAJOR, filterType);
+    this._filterModel.set(UpdateType.MAJOR, filterType);
   }
 
   _getFilters() {
-    const points = this._pointsModel.getItems();
+    const points = this._pointsModel.get();
 
     let filters = {};
 

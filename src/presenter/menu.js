@@ -2,14 +2,14 @@ import FilterPresenter from '../presenter/filter.js';
 import MenuView from '../view/menu.js';
 import EventAddButtonView from '../view/add-button';
 import {render} from '../utils/render.js';
-import {UpdateType, RenderPosition, ModelType, MenuItem, FilterType} from '../const.js';
+import {UpdateType, RenderPosition, MenuItem, FilterType} from '../const.js';
 
 export default class Menu {
-  constructor(menuContainer, modelStore) {
+  constructor(menuContainer, newPointModel, menuModel, filterModel, pointsModel) {
     this._menuContainer = menuContainer;
-    this._newPointModel = modelStore.get(ModelType.NEW_POINT);
-    this._menuModel = modelStore.get(ModelType.MENU);
-    this._filterModel = modelStore.get(ModelType.FILTER);
+    this._newPointModel = newPointModel;
+    this._menuModel = menuModel;
+    this._filterModel = filterModel;
 
     this._controlsContainer = this._menuContainer.querySelector(`.trip-controls`);
     this._tripConntrolsTitle = this._controlsContainer.querySelector(`h2`);
@@ -17,7 +17,7 @@ export default class Menu {
     this._tabsComponent = null;
     this._buttonAddComponent = null;
 
-    this._filterPresenter = new FilterPresenter(this._controlsContainer, modelStore);
+    this._filterPresenter = new FilterPresenter(this._controlsContainer, filterModel, pointsModel);
 
     this._handleMenuClick = this._handleMenuClick.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -26,7 +26,7 @@ export default class Menu {
   }
 
   init() {
-    this._tabsComponent = new MenuView(this._menuModel.getItem());
+    this._tabsComponent = new MenuView(this._menuModel.get());
     render(this._tripConntrolsTitle, this._tabsComponent, RenderPosition.AFTEREND);
 
     this._buttonAddComponent = new EventAddButtonView();
@@ -46,31 +46,31 @@ export default class Menu {
   _handleMenuClick(menuItem) {
     switch (menuItem) {
       case MenuItem.ADD_NEW_EVENT:
-        this._setActiveNavItem(MenuItem.TABLE);
+        this._setActiveMenuItem(MenuItem.TABLE);
         this._filterPresenter.init();
-        this._newPointModel.setItem(UpdateType.MAJOR, menuItem);
+        this._newPointModel.set(UpdateType.MAJOR, menuItem);
         break;
       case MenuItem.TABLE.toLowerCase():
-        this._setActiveNavItem(menuItem);
+        this._setActiveMenuItem(menuItem);
         this._filterPresenter.init();
         break;
       case MenuItem.STATISTICS.toLowerCase():
-        this._setActiveNavItem(menuItem);
+        this._setActiveMenuItem(menuItem);
         this._filterPresenter.destroy();
         break;
     }
   }
 
-  _setActiveNavItem(tab) {
-    if (this._filterModel.getItem() !== FilterType.EVERYTHING) {
-      this._filterModel.setItem(UpdateType.MAJOR, FilterType.EVERYTHING);
+  _setActiveMenuItem(tab) {
+    if (this._filterModel.get() !== FilterType.EVERYTHING) {
+      this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     }
 
-    if (this._menuModel.getItem().toLowerCase() === tab) {
+    if (this._menuModel.get().toLowerCase() === tab) {
       return;
     }
 
-    this._menuModel.setItem(UpdateType.MAJOR, tab);
+    this._menuModel.set(UpdateType.MAJOR, tab);
     this._tabsComponent.setActiveTab(tab);
   }
 }
