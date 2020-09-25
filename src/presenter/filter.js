@@ -28,7 +28,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition);
+      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -67,7 +67,6 @@ export default class Filter {
       .forEach((filterTitle) => {
         const isFilteredEventsExist = points.some(getFilterRule(filterTitle));
         filters[filterTitle] = isFilteredEventsExist;
-        return;
       });
 
     return filters;

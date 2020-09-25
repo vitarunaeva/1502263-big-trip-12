@@ -36,7 +36,7 @@ export default class EventSort extends SmartView {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createEventSorterTemplate(this._currentSortType);
   }
 

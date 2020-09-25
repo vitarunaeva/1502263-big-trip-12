@@ -7,7 +7,7 @@ export default class Offers extends Observer {
   }
 
   set(offers) {
-    this._offers = offers.slice;
+    this._offers = offers.slice();
   }
 
   get() {

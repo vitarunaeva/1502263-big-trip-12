@@ -5,7 +5,6 @@ import {UserAction, UpdateType, RenderPosition} from '../const.js';
 export default class NewPoint {
   constructor(pointContainer, newPointModel, changeData) {
     this._pointContainer = pointContainer;
-    this._newPointModel = newPointModel;
     this._changeData = changeData;
 
     this._editorComponent = null;
@@ -24,7 +23,7 @@ export default class NewPoint {
 
     this._editorComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);
-    this._editorComponent.setDatePicker();
+    this._editorComponent.setDatePickers();
 
     render(this._pointContainer, this._editorComponent, RenderPosition.AFTERBEGIN);
 
@@ -38,7 +37,6 @@ export default class NewPoint {
 
     remove(this._editorComponent);
     this._editorComponent = null;
-    this._newPointModel.set(UpdateType.MINOR, null);
 
     document.removeEventListener(`keydown`, this._handleEscKeyDown);
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);

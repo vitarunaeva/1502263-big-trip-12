@@ -39,7 +39,7 @@ export default class Menu extends SmartView {
     this.setMenuClickHandler(this._callback.menuClick);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createTripTabsTemplate(this._item);
   }
 

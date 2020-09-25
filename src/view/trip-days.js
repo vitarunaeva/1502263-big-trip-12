@@ -34,7 +34,7 @@ export default class TripDays extends AbstractView {
     this._groupedDate = groupedDate;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createTripDaysTemplate(this._dayId, this._groupedDate);
   }
 

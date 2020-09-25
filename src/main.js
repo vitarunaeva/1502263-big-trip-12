@@ -46,10 +46,6 @@ const menuPresenter = new MenuPresenter(tripMainElement, newPointModel, menuMode
 const eventPresenter = new EventPresenter(tripEventsElement, pointsModel, filterModel, newPointModel, menuModel, offersModel, destinationsModel, apiWithProvider);
 const statisticsPresenter = new StatisticsPresenter(statisticsElement, pointsModel, menuModel);
 
-tripInfoPresenter.init();
-eventPresenter.init();
-statisticsPresenter.init();
-
 const fetchedDataPromises = [
   apiWithProvider.getDestinations(),
   apiWithProvider.getOffers(),
@@ -58,31 +54,34 @@ const fetchedDataPromises = [
 
 Promise.all(fetchedDataPromises)
   .then(([destinations, offers, points]) => {
-    destinationsModel.set(destinations);
     offersModel.set(offers);
-    pointsModel.set(UpdateType.INIT, points);
+    eventPresenter.init();
+    tripInfoPresenter.init();
+    statisticsPresenter.init();
     menuPresenter.init();
+    destinationsModel.set(destinations);
+    pointsModel.set(UpdateType.INIT, points);
   })
   .catch(() => {
-    pointsModel.setItems(UpdateType.CRASH, []);
+    pointsModel.set(UpdateType.CRASH, []);
   });
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
-    // Действие, в случае ошибки при регистрации ServiceWorker
-    console.error(`ServiceWorker isn't available`); // eslint-disable-line
-    });
-});
-
-window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
-  apiWithProvider.sync();
-});
-
-window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
+//       // Действие, в случае успешной регистрации ServiceWorker
+//       console.log(`ServiceWorker available`); // eslint-disable-line
+//     }).catch(() => {
+//     // Действие, в случае ошибки при регистрации ServiceWorker
+//     console.error(`ServiceWorker isn't available`); // eslint-disable-line
+//     });
+// });
+//
+// window.addEventListener(`online`, () => {
+//   document.title = document.title.replace(` [offline]`, ``);
+//   apiWithProvider.sync();
+// });
+//
+// window.addEventListener(`offline`, () => {
+//   document.title += ` [offline]`;
+// });

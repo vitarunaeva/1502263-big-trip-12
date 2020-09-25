@@ -17,7 +17,7 @@ export default class AddButton extends AbstractView {
     this._buttonClickHandler = this._buttonClickHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createAddButtonTemplate();
   }
 

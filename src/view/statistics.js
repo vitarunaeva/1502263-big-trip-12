@@ -259,7 +259,7 @@ export default class Statistics extends AbstractView {
     this._setCharts();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createStatisticsTemplate();
   }
 

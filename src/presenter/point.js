@@ -40,7 +40,7 @@ export default class Point {
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevEditorComponent === null) {
-      render(this._pointContainer, this._pointComponent, RenderPosition);
+      render(this._pointContainer, this._pointComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -108,7 +108,7 @@ export default class Point {
 
   _replacePointToEditor() {
     replace(this._editorComponent, this._pointComponent);
-    this._editorComponent.setDatePicker();
+    this._editorComponent.setDatePickers();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = PointMode.EDITING;

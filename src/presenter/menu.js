@@ -10,6 +10,7 @@ export default class Menu {
     this._newPointModel = newPointModel;
     this._menuModel = menuModel;
     this._filterModel = filterModel;
+    this._pointsModel = pointsModel;
 
     this._controlsContainer = this._menuContainer.querySelector(`.trip-controls`);
     this._tripConntrolsTitle = this._controlsContainer.querySelector(`h2`);
@@ -21,8 +22,10 @@ export default class Menu {
 
     this._handleMenuClick = this._handleMenuClick.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handlePointsModelEvent = this._handlePointsModelEvent.bind(this);
 
     this._newPointModel.addObserver(this._handleModelEvent);
+    this._pointsModel.addObserver(this._handlePointsModelEvent);
   }
 
   init() {
@@ -38,9 +41,11 @@ export default class Menu {
     this._filterPresenter.init();
   }
 
-  _handleModelEvent(_event, payload) {
-    const isNewPointActive = payload !== null;
-    this._buttonAddComponent.setDisabledButton(isNewPointActive);
+  _handleModelEvent(event, payload) {
+    if (event === UpdateType.MAJOR) {
+      const isNewPointActive = payload !== null;
+      this._buttonAddComponent.setDisabledButton(isNewPointActive);
+    }
   }
 
   _handleMenuClick(menuItem) {
@@ -72,5 +77,11 @@ export default class Menu {
 
     this._menuModel.set(UpdateType.MAJOR, tab);
     this._tabsComponent.setActiveTab(tab);
+  }
+
+  _handlePointsModelEvent(event) {
+    if (event === UpdateType.INIT) {
+      this._filterPresenter.init();
+    }
   }
 }

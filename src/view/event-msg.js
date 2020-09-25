@@ -13,7 +13,7 @@ export default class EventMsg extends AbstractView {
     this._msg = msg;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createMsgTemplate(this._msg);
   }
 }

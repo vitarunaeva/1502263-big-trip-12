@@ -70,7 +70,7 @@ export default class EventPoint extends AbstractView {
     this._editClickHandler = this._editClickHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createEventTemplate(this._tripEvent);
   }
 
