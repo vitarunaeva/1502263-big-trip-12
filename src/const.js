@@ -97,7 +97,6 @@ export const MessageText = {
   LOADING: `Loading...`
 };
 
-
 export const State = {
   SAVING: `SAVING`,
   DELETING: `DELETING`,

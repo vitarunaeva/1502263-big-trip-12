@@ -65,8 +65,7 @@ export default class Filter {
     Object
       .values(FilterType)
       .forEach((filterTitle) => {
-        const isFilteredEventsExist = points.some(getFilterRule(filterTitle));
-        filters[filterTitle] = isFilteredEventsExist;
+        filters[filterTitle] = points.some(getFilterRule(filterTitle));
       });
 
     return filters;
