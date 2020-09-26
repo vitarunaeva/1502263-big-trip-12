@@ -1,4 +1,4 @@
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 
 const createFilterItemTemplate = (title, currentFilterType, isFilteredTaskExist) => {
   return (
@@ -42,7 +42,7 @@ export default class EventFilter extends AbstractView {
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createEventFilterTemplate(this._currentFilter, this._filters);
   }
 

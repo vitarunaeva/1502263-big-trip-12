@@ -1,5 +1,5 @@
 import {RenderPosition} from '../const.js';
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from "../view/abstract";
 
 export const render = (container, child, place = RenderPosition.BEFOREEND) => {
   if (container instanceof AbstractView) {
@@ -24,14 +24,6 @@ export const render = (container, child, place = RenderPosition.BEFOREEND) => {
       container.before(child);
       break;
   }
-};
-
-export const renderTemplate = (container, template, place) => {
-  if (container instanceof AbstractView) {
-    container = container.getElement();
-  }
-
-  container.insertAdjacentHTML(place, template);
 };
 
 export const createElement = (template) => {

@@ -108,7 +108,7 @@ export default class Point {
 
   _replacePointToEditor() {
     replace(this._editorComponent, this._pointComponent);
-    this._editorComponent.setDatePicker();
+    this._editorComponent.setDatePickers();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = PointMode.EDITING;

@@ -1,4 +1,4 @@
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 import {TabAdditionalItem} from '../const.js';
 
 export const createAddButtonTemplate = () => {
@@ -17,7 +17,7 @@ export default class AddButton extends AbstractView {
     this._buttonClickHandler = this._buttonClickHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createAddButtonTemplate();
   }
 

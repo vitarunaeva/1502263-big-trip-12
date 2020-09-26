@@ -1,18 +1,36 @@
 import EventPresenter from './presenter/event.js';
-import Api from './api.js';
-import StoreFactory from './model/store-factore';
+import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 import TripInfoPresenter from './presenter/trip-info.js';
 import MenuPresenter from './presenter/menu.js';
 import StatisticsPresenter from './presenter/statistics.js';
-import {ModelType, UpdateType} from './const.js';
+import {UpdateType} from './const.js';
+import Menu from "./model/menu";
+import Destinations from "./model/destinations";
+import Offers from "./model/offers";
+import Points from "./model/points";
+import NewPoint from "./model/new-point";
+import Filter from "./model/filter";
 
 
-const AUTHORIZATION = `Basic c100a054440a4hs`;
+const AUTHORIZATION = `Basic c100a0544rt4hs`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-const modelStore = StoreFactory.create();
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+const menuModel = new Menu();
+const destinationsModel = new Destinations();
+const offersModel = new Offers();
+const pointsModel = new Points();
+const newPointModel = new NewPoint();
+const filterModel = new Filter();
 
 const bodyElement = document.querySelector(`.page-body`);
 const headerElement = bodyElement.querySelector(`.page-header`);
@@ -23,30 +41,47 @@ const mainElement = document.querySelector(`.page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const statisticsElement = mainElement.querySelector(`.page-body__container`);
 
-const tripInfoPresenter = new TripInfoPresenter(tripMainElement, modelStore);
-const menuPresenter = new MenuPresenter(tripMainElement, modelStore);
-const eventPresenter = new EventPresenter(tripEventsElement, modelStore, api);
-const statisticsPresenter = new StatisticsPresenter(statisticsElement, modelStore);
-
-tripInfoPresenter.init();
-eventPresenter.init();
-statisticsPresenter.init();
+const tripInfoPresenter = new TripInfoPresenter(tripMainElement, pointsModel);
+const menuPresenter = new MenuPresenter(tripMainElement, newPointModel, menuModel, filterModel, pointsModel);
+const eventPresenter = new EventPresenter(tripEventsElement, pointsModel, filterModel, newPointModel, menuModel, offersModel, destinationsModel, apiWithProvider);
+const statisticsPresenter = new StatisticsPresenter(statisticsElement, pointsModel, menuModel);
 
 const fetchedDataPromises = [
-  api.getDestinations(),
-  api.getOffers(),
-  api.getPoints()
+  apiWithProvider.getDestinations(),
+  apiWithProvider.getOffers(),
+  apiWithProvider.getPoints()
 ];
 
 Promise.all(fetchedDataPromises)
   .then(([destinations, offers, points]) => {
-    modelStore.get(ModelType.DESTINATIONS).setItems(destinations);
-    modelStore.get(ModelType.OFFERS).setItems(offers);
-    modelStore.get(ModelType.POINTS).setItems(UpdateType.INIT, points);
+    offersModel.set(offers);
+    eventPresenter.init();
+    tripInfoPresenter.init();
+    statisticsPresenter.init();
     menuPresenter.init();
+    destinationsModel.set(destinations);
+    pointsModel.set(UpdateType.INIT, points);
   })
   .catch(() => {
-    modelStore.get(ModelType.POINTS).setItems(UpdateType.CRASH, []);
+    pointsModel.set(UpdateType.CRASH, []);
   });
 
-
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
+//       // Действие, в случае успешной регистрации ServiceWorker
+//       console.log(`ServiceWorker available`); // eslint-disable-line
+//     }).catch(() => {
+//     // Действие, в случае ошибки при регистрации ServiceWorker
+//     console.error(`ServiceWorker isn't available`); // eslint-disable-line
+//     });
+// });
+//
+// window.addEventListener(`online`, () => {
+//   document.title = document.title.replace(` [offline]`, ``);
+//   apiWithProvider.sync();
+// });
+//
+// window.addEventListener(`offline`, () => {
+//   document.title += ` [offline]`;
+// });

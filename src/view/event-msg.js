@@ -1,4 +1,4 @@
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 
 export const createMsgTemplate = (msg) => {
   return (
@@ -13,7 +13,7 @@ export default class EventMsg extends AbstractView {
     this._msg = msg;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createMsgTemplate(this._msg);
   }
 }

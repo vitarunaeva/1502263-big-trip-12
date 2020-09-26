@@ -1,10 +1,10 @@
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import SmartView from '../abstract/smart-view.js';
-import {MOVE_TYPE, ACTIVITY_TYPE, POINT_ID, NEW_EVENT, State} from '../const.js';
+import {MoveType, ActivityType, POINT_ID, NEW_EVENT, State} from '../const.js';
 import {eventTypePostfix, defineDestination, isPendingState} from '../utils/trip.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 import {toFirstUpperLetter} from "../utils/common";
+import SmartView from "./smart.js";
 
 const createEventTypesTemplate = (selectedType) => {
   return Object.values(selectedType).map((type) => (
@@ -155,11 +155,11 @@ const createEditTripEventTemplate = (eventItem, destinations, offersList, editSt
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
-              ${createEventTypesTemplate(MOVE_TYPE)}
+              ${createEventTypesTemplate(MoveType)}
             </fieldset>
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
-              ${createEventTypesTemplate(ACTIVITY_TYPE)}
+              ${createEventTypesTemplate(ActivityType)}
             </fieldset>
           </div>
         </div>
@@ -252,7 +252,7 @@ export default class EventEditor extends SmartView {
     this.updateData(this._sourceItem);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createEditTripEventTemplate(this._eventItem, this._destinations, this._offerList, this._editState);
   }
 
@@ -293,7 +293,7 @@ export default class EventEditor extends SmartView {
     }
   }
 
-  setDatePicker() {
+  setDatePickers() {
     this._destroyDatePickers();
 
     const eventStartDate = flatpickr(
@@ -326,7 +326,9 @@ export default class EventEditor extends SmartView {
 
   _startChangeHandler([selectedDate]) {
     if (selectedDate) {
-      this._eventItem.startDate = new Date(selectedDate);
+      const newDate = new Date(selectedDate);
+      this._eventItem.startDate = newDate;
+      this._datepickers[1].set(`minDate`, newDate);
     }
   }
 
@@ -392,8 +394,7 @@ export default class EventEditor extends SmartView {
     }
 
     const updatedProperty = defineDestination(this._destinations, selectedCity);
-    // const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
-    const isRenderActual = true;
+    const isRenderActual = updatedProperty.description === this._eventItem.destination.description;
 
     this.updateData({
       destination: updatedProperty
@@ -429,7 +430,10 @@ export default class EventEditor extends SmartView {
     super.updateData(updatedData, justDataUpdating);
     this._eventItem = Object.assign({}, this._eventItem, this._data);
     this._sourceItem.isFavorite = this._eventItem.isFavorite;
-    this.updateElement();
+
+    if (!justDataUpdating) {
+      this.updateElement();
+    }
   }
 
   setFavoriteClickHandler(callback) {

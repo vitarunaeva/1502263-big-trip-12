@@ -1,4 +1,4 @@
-import SmartView from '../abstract/smart-view.js';
+import SmartView from './smart.js';
 import {TabNavItem} from '../const.js';
 
 const createMenuTemplate = (currentTab) => {
@@ -39,7 +39,7 @@ export default class Menu extends SmartView {
     this.setMenuClickHandler(this._callback.menuClick);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createTripTabsTemplate(this._item);
   }
 

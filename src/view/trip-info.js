@@ -1,8 +1,8 @@
 import moment from 'moment';
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 import {getTotalEventPrice} from '../utils/trip.js';
 import {getSorterRule} from '../utils/trip.js';
-import {SORT_TYPE} from '../const.js';
+import {SortType} from '../const.js';
 
 const createDatesTemplate = (sortedEvents) => {
   const tripStartDate = sortedEvents[0].startDate;
@@ -51,7 +51,7 @@ const createTripInfoTemplate = (tripEvents) => {
     return `<div class="trip-info__main"></div>`;
   }
 
-  const sortedEvents = tripEvents.sort(getSorterRule(SORT_TYPE.EVENT));
+  const sortedEvents = tripEvents.sort(getSorterRule(SortType.EVENT));
 
   const cost = tripEvents.reduce((accumulatedSum, event) => accumulatedSum + getTotalEventPrice(event), 0);
 
@@ -76,7 +76,7 @@ export default class TripInfo extends AbstractView {
     this._tripEvents = events;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createTripInfoTemplate(this._tripEvents);
   }
 }

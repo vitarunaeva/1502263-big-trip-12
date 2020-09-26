@@ -1,4 +1,4 @@
-export const MOVE_TYPE = {
+export const MoveType = {
   TAXI: `taxi`,
   BUS: `bus`,
   TRAIN: `train`,
@@ -8,15 +8,15 @@ export const MOVE_TYPE = {
   FLIGHT: `flight`,
 };
 
-export const ACTIVITY_TYPE = {
+export const ActivityType = {
   CHECK_IN: `check-in`,
   SIGHTSEEING: `sightseeing`,
   RESTAURANT: `restaurant`,
 };
 
-export const EVENT_TYPE = Object.assign({}, MOVE_TYPE, ACTIVITY_TYPE);
+export const EVENT_TYPE = Object.assign({}, MoveType, ActivityType);
 
-export const POSTFIX_TYPE = {
+export const PostfixType = {
   MOVE: `to`,
   ACTIVITY: `in`,
 };
@@ -25,13 +25,13 @@ export const MAX_OFFERS = 3;
 
 export const POINT_ID = null;
 
-export const SORT_TYPE = {
+export const SortType = {
   EVENT: `event`,
   TIME: `time`,
   PRICE: `price`,
 };
 
-export const FILTER_TYPE = {
+export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
@@ -85,15 +85,6 @@ export const TabNavItem = {
   STATISTICS: `Statistics`
 };
 
-export const ModelType = {
-  DESTINATIONS: `Destinations`,
-  FILTER: `Filter`,
-  OFFERS: `Offers`,
-  MENU: `Menu`,
-  POINTS: `Points`,
-  NEW_POINT: `NewPoint`,
-};
-
 export const TabAdditionalItem = {
   ADD_NEW_EVENT: `ADD_NEW_EVENT`,
 };
@@ -105,7 +96,6 @@ export const MessageText = {
   NO_POINTS: `Click New Event to create your first point`,
   LOADING: `Loading...`
 };
-
 
 export const State = {
   SAVING: `SAVING`,

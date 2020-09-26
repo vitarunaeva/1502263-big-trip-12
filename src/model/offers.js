@@ -1,10 +1,17 @@
-import SimpleCollection from '../abstract/simple-collection.js';
-import {AdapterDecorator as Fetchable} from '../abstract/fetch-adapter.js';
+import Observer from "../utils/observer.js";
 
-// eslint-disable-next-line new-cap
-export default class Offers extends Fetchable(SimpleCollection) {
+export default class Offers extends Observer {
   constructor() {
     super();
+    this._offers = [];
+  }
+
+  set(offers) {
+    this._offers = offers.slice();
+  }
+
+  get() {
+    return this._offers;
   }
 
   static adaptToClient(offer) {

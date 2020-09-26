@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import AbstractView from '../abstract/simple-view.js';
+import AbstractView from './abstract.js';
 import {StatisticsType} from '../const.js';
 import {calculateStat} from '../utils/statistics.js';
 
@@ -259,7 +259,7 @@ export default class Statistics extends AbstractView {
     this._setCharts();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createStatisticsTemplate();
   }
 

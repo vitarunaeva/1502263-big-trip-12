@@ -1,12 +1,12 @@
 import TripInfoView from '../view/trip-info';
 
 import {render, replace, remove} from '../utils/render.js';
-import {RenderPosition, ModelType} from '../const.js';
+import {RenderPosition} from '../const.js';
 
 export default class TripInfo {
-  constructor(tripInfoContainer, modelStore) {
+  constructor(tripInfoContainer, pointsModel) {
     this._tripInfoContainer = tripInfoContainer;
-    this._pointsModel = modelStore.get(ModelType.POINTS);
+    this._pointsModel = pointsModel;
     this._tripInfoComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -16,7 +16,7 @@ export default class TripInfo {
 
   init() {
     const prevTripInfoComponent = this._tripInfoComponent;
-    const points = this._pointsModel.getItems();
+    const points = this._pointsModel.get();
 
     this._tripInfoComponent = new TripInfoView(points);
 

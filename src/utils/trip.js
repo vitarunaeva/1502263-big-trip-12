@@ -1,21 +1,21 @@
 import moment from 'moment';
-import {ACTIVITY_TYPE, POSTFIX_TYPE, SORT_TYPE, FILTER_TYPE} from '../const.js';
+import {ActivityType, PostfixType, SortType, FilterType} from '../const.js';
 
 export const eventTypePostfix = (eventType) => {
-  return Object.values(ACTIVITY_TYPE).includes(eventType) ? POSTFIX_TYPE.ACTIVITY : POSTFIX_TYPE.MOVE;
+  return Object.values(ActivityType).includes(eventType) ? PostfixType.ACTIVITY : PostfixType.MOVE;
 };
 
 export const getSorterRule = (sortType) => {
   switch (sortType) {
-    case SORT_TYPE.EVENT:
+    case SortType.EVENT:
       return (a, b) => moment(a.startDate) - moment(b.startDate);
-    case SORT_TYPE.TIME:
+    case SortType.TIME:
       return (a, b) => {
         const durationA = moment(a.endDate).diff(moment(a.startDate));
         const durationB = moment(b.endDate).diff(moment(b.startDate));
         return durationB - durationA;
       };
-    case SORT_TYPE.PRICE:
+    case SortType.PRICE:
       return (a, b) => getTotalEventPrice(b) - getTotalEventPrice(a);
     default:
       throw new Error(`Incorrect sort type`);
@@ -24,9 +24,9 @@ export const getSorterRule = (sortType) => {
 
 export const getFilterRule = (filterType) => {
   switch (filterType) {
-    case FILTER_TYPE.FUTURE:
+    case FilterType.FUTURE:
       return (event) => moment().isBefore(event.startDate);
-    case FILTER_TYPE.PAST:
+    case FilterType.PAST:
       return (event) => moment().isAfter(event.endDate);
     default:
       return () => true;
@@ -72,10 +72,10 @@ export const convertToNullableDate = (shortDay) => {
 
 export const groupEvents = (sortType, sortedTripEvents) => {
   switch (sortType) {
-    case SORT_TYPE.EVENT:
+    case SortType.EVENT:
       return splitEventsByDays(sortedTripEvents);
-    case SORT_TYPE.TIME:
-    case SORT_TYPE.PRICE:
+    case SortType.TIME:
+    case SortType.PRICE:
       return splitEvents(sortedTripEvents);
     default:
       return {emptyDayWrapper: sortedTripEvents};

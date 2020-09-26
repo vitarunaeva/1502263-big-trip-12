@@ -1,10 +1,10 @@
-import SmartView from '../abstract/smart-view.js';
-import {SORT_TYPE} from '../const.js';
+import SmartView from './smart.js';
+import {SortType} from '../const.js';
 
 const createEventSorterTemplate = (selectedSortType) => {
 
   const sortItemsTemplate = Object
-    .values(SORT_TYPE)
+    .values(SortType)
     .map((sortItem) =>
       `<div class="trip-sort__item  trip-sort__item--${sortItem}">
         <input type="radio" name="trip-sort" class="trip-sort__input  visually-hidden"
@@ -36,7 +36,7 @@ export default class EventSort extends SmartView {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return createEventSorterTemplate(this._currentSortType);
   }
 
