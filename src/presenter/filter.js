@@ -60,7 +60,7 @@ export default class Filter {
   _getFilters() {
     const points = this._pointsModel.get();
 
-    let filters = {};
+    const filters = {};
 
     Object
       .values(FilterType)

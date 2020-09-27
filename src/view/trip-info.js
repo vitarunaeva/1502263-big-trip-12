@@ -25,8 +25,8 @@ const createDatesTemplate = (sortedEvents) => {
 };
 
 const createCitiesTemplate = (sortedEvents) => {
-  let sortedCities = new Set(sortedEvents.map((event) => event.destination.name));
-  let cities = [...sortedCities];
+  const sortedCities = new Set(sortedEvents.map((event) => event.destination.name));
+  const cities = [...sortedCities];
 
   const tripInfoPoints = [];
   tripInfoPoints.push([...cities][0]);
