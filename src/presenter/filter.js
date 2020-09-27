@@ -1,4 +1,4 @@
-import EventFilterView from '../view/filter.js';
+import FilterView from '../view/filter.js';
 import {render, replace, remove} from '../utils/render.js';
 import {UpdateType, FilterType} from '../const.js';
 import {getFilterRule} from '../utils/trip.js';
@@ -24,7 +24,7 @@ export default class Filter {
 
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new EventFilterView(this._currentFilter, filters);
+    this._filterComponent = new FilterView(this._currentFilter, filters);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

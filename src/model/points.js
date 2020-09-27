@@ -40,7 +40,7 @@ export default class Points extends Observer {
   }
 
   delete(updateType, selectedItem) {
-    this._items.filter((currentItem) => currentItem.id !== selectedItem.id);
+    this._items = this._items.filter((currentItem) => currentItem.id !== selectedItem.id);
     this._notify(updateType);
   }
 

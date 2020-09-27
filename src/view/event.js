@@ -62,7 +62,7 @@ const createEventTemplate = (event) => {
   );
 };
 
-export default class EventPoint extends AbstractView {
+export default class Event extends AbstractView {
   constructor(tripEvent) {
     super();
 

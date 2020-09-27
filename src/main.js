@@ -14,7 +14,7 @@ import NewPoint from "./model/new-point";
 import Filter from "./model/filter";
 
 
-const AUTHORIZATION = `Basic c100a0544rt4hs`;
+const AUTHORIZATION = `Basic c100b03212rt4hs`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -22,7 +22,7 @@ const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-const store = new Store(STORE_NAME, window.localStorage);
+const store = new Store(STORE_NAME, localStorage);
 const apiWithProvider = new Provider(api, store);
 
 const menuModel = new Menu();
@@ -66,22 +66,15 @@ Promise.all(fetchedDataPromises)
     pointsModel.set(UpdateType.CRASH, []);
   });
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`)
-//     .then(() => {
-//       // Действие, в случае успешной регистрации ServiceWorker
-//       console.log(`ServiceWorker available`); // eslint-disable-line
-//     }).catch(() => {
-//     // Действие, в случае ошибки при регистрации ServiceWorker
-//     console.error(`ServiceWorker isn't available`); // eslint-disable-line
-//     });
-// });
-//
-// window.addEventListener(`online`, () => {
-//   document.title = document.title.replace(` [offline]`, ``);
-//   apiWithProvider.sync();
-// });
-//
-// window.addEventListener(`offline`, () => {
-//   document.title += ` [offline]`;
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

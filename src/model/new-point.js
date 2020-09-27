@@ -5,9 +5,7 @@ export default class NewPoint extends Observer {
     super();
   }
 
-  set(updateType, item) {
-    this._items = item;
-
+  set(updateType) {
     this._notify(updateType);
   }
 }

@@ -18,7 +18,7 @@ const createFilterItemTemplate = (title, currentFilterType, isFilteredTaskExist)
   );
 };
 
-const createEventFilterTemplate = (currentFilterType, filters) => {
+const createFilterTemplate = (currentFilterType, filters) => {
   const filterItemsTemplate = Object
     .entries(filters)
     .map(([filterTitle, isFilteredTaskExist]) => createFilterItemTemplate(filterTitle, currentFilterType, isFilteredTaskExist))
@@ -32,7 +32,7 @@ const createEventFilterTemplate = (currentFilterType, filters) => {
   );
 };
 
-export default class EventFilter extends AbstractView {
+export default class Filter extends AbstractView {
   constructor(currentFilterType, filters) {
     super();
 
@@ -43,7 +43,7 @@ export default class EventFilter extends AbstractView {
   }
 
   _getTemplate() {
-    return createEventFilterTemplate(this._currentFilter, this._filters);
+    return createFilterTemplate(this._currentFilter, this._filters);
   }
 
   _filterTypeChangeHandler(evt) {

@@ -157,6 +157,7 @@ export default class Event {
   _handleMenuEvent(_updateType, menuItem) {
     switch (menuItem.toLowerCase()) {
       case TabNavItem.TABLE.toLowerCase():
+        this._clearTripBoard({resetSortType: true});
         this._renderTripBoard();
         break;
       case TabNavItem.STATISTICS.toLowerCase():

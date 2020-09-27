@@ -1,4 +1,4 @@
-import EventEditorView from '../view/edit-event.js';
+import EventEditorView from '../view/event-editor.js';
 import {remove, render} from '../utils/render.js';
 import {UserAction, UpdateType, RenderPosition} from '../const.js';
 

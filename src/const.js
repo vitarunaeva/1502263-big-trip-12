@@ -105,3 +105,8 @@ export const State = {
   SUCCEED: `SUCCEED`,
 };
 
+export const StorageType = {
+  OFFERS_STORAGE: `offers`,
+  DESTINATIONS_STORAGE: `destinations`
+};
+

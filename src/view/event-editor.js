@@ -368,6 +368,7 @@ export default class EventEditor extends SmartView {
     });
 
     this.updateElement();
+    this.setDatePickers();
   }
 
 

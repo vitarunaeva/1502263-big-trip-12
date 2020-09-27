@@ -1,5 +1,5 @@
-import EventEditorView from "../view/edit-event";
-import EventPointView from "../view/event";
+import EventEditorView from "../view/event-editor";
+import EventView from "../view/event";
 import {PointMode, UserAction, UpdateType, State} from '../const.js';
 import {render, replace, remove} from '../utils/render.js';
 
@@ -30,7 +30,7 @@ export default class Point {
     const prevPointComponent = this._pointComponent;
     const prevEditorComponent = this._editorComponent;
 
-    this._pointComponent = new EventPointView(this._tripEvent);
+    this._pointComponent = new EventView(this._tripEvent);
     this._editorComponent = new EventEditorView(destinations, tripOffers, this._tripEvent);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);

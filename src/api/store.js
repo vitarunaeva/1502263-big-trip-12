@@ -42,4 +42,12 @@ export default class Store {
         JSON.stringify(store)
     );
   }
+
+  setIndividualItem(key, items) {
+    this._storage.setItem(key, JSON.stringify(items));
+  }
+
+  getIndividualItem(key) {
+    return JSON.parse(this._storage.getItem(key));
+  }
 }

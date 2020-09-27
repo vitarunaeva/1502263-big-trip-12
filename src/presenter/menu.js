@@ -71,7 +71,7 @@ export default class Menu {
       this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     }
 
-    if (this._menuModel.get().toLowerCase() === tab) {
+    if (this._menuModel.get().toLowerCase() === tab.toLowerCase()) {
       return;
     }
 

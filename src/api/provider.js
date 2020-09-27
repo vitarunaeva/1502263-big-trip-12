@@ -1,11 +1,13 @@
 import {nanoid} from "nanoid";
+import {getRandomInteger} from "../utils/random-integer.js";
+import {StorageType} from "../const.js";
 import PointsModel from "../model/points.js";
 import DestinationsModel from '../model/destinations.js';
 import OffersModel from '../model/offers.js';
 
 const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
-    .map(({payload}) => payload.events);
+    .map(({payload}) => payload.point);
 };
 
 const createStoreStructure = (items) => {
@@ -33,7 +35,13 @@ export default class Provider {
     }
 
     const storePoints = Object.values(this._store.getItems());
-
+    if (!Provider._isOnline()) {
+      storePoints.forEach((point) => {
+        point.destination.pictures = point.destination.pictures.map((picture) => {
+          return {src: `/img/photos/${getRandomInteger(1, 5)}.jpg`, description: picture.description};
+        });
+      });
+    }
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
 
@@ -42,13 +50,20 @@ export default class Provider {
       return this._api.getDestinations()
         .then((destinations) => {
           const items = destinations.map(DestinationsModel.adaptToServer);
-          this._store.setItems(items);
+          this._store.setIndividualItem(StorageType.DESTINATIONS_STORAGE, items);
           return destinations;
         });
     }
 
-    const storeDestinations = Object.values(this._store.getItems());
+    const storeDestinations = Object.values(this._store.getIndividualItem(StorageType.DESTINATIONS_STORAGE));
 
+    if (!Provider._isOnline()) {
+      storeDestinations.forEach((it) => {
+        it.pictures = it.pictures.map((picture) => {
+          return {src: `/img/photos/${getRandomInteger(1, 5)}.jpg`, description: picture.description};
+        });
+      });
+    }
     return Promise.resolve(storeDestinations.map(DestinationsModel.adaptToClient));
   }
 
@@ -57,12 +72,12 @@ export default class Provider {
       return this._api.getOffers()
         .then((offers) => {
           const items = offers.map(OffersModel.adaptToServer);
-          this._store.setItems(items);
+          this._store.setIndividualItem(StorageType.OFFERS_STORAGE, items);
           return offers;
         });
     }
 
-    const storeOffers = Object.values(this._store.getItems());
+    const storeOffers = Object.values(this._store.getIndividualItem(StorageType.OFFERS_STORAGE));
 
     return Promise.resolve(storeOffers.map(OffersModel.adaptToClient));
   }
@@ -115,7 +130,7 @@ export default class Provider {
 
       return this._api.sync(storePoints)
         .then((response) => {
-          const createdPoints = getSyncedPoints(response.created);
+          const createdPoints = response.created;
           const updatedPoints = getSyncedPoints(response.updated);
 
 
