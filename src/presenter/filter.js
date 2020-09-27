@@ -1,6 +1,6 @@
 import EventFilterView from '../view/filter.js';
 import {render, replace, remove} from '../utils/render.js';
-import {UpdateType, RenderPosition, FilterType} from '../const.js';
+import {UpdateType, FilterType} from '../const.js';
 import {getFilterRule} from '../utils/trip.js';
 
 export default class Filter {
@@ -28,7 +28,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent);
       return;
     }
 

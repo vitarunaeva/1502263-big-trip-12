@@ -84,7 +84,7 @@ export default class Event {
 
     this._eventSorterComponent = new EventSortView(this._currentSortType);
     this._eventSorterComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    render(this._tripEventsContainer, this._eventSorterComponent, RenderPosition.BEFOREEND);
+    render(this._tripEventsContainer, this._eventSorterComponent);
   }
 
   _handleModeChange() {
@@ -208,7 +208,7 @@ export default class Event {
         const dayId = dayIndex + 1;
         const eventDayComponent = new TripDayView(dayId, eventDay);
         this._dayStorage[dayId] = eventDayComponent;
-        render(this._tripEventsContainer, eventDayComponent, RenderPosition.BEFOREEND);
+        render(this._tripEventsContainer, eventDayComponent);
 
         groupedEvents[shortDay].forEach((tripEvent) => {
           const pointContainer = eventDayComponent.getPointContainer();
@@ -218,7 +218,7 @@ export default class Event {
     } else if (this._currentSortType === SortType.TIME || this._currentSortType === SortType.PRICE) {
       const eventDayComponent = new TripDayView();
       this._dayStorage[0] = eventDayComponent;
-      render(this._tripEventsContainer, eventDayComponent, RenderPosition.BEFOREEND);
+      render(this._tripEventsContainer, eventDayComponent);
       const pointContainer = eventDayComponent.getPointContainer();
 
       groupedEvents.forEach((tripEvent) => {

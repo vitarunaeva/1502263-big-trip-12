@@ -1,6 +1,6 @@
 import EventEditorView from "../view/edit-event";
 import EventPointView from "../view/event";
-import {RenderPosition, PointMode, UserAction, UpdateType, State} from '../const.js';
+import {PointMode, UserAction, UpdateType, State} from '../const.js';
 import {render, replace, remove} from '../utils/render.js';
 
 export default class Point {
@@ -40,7 +40,7 @@ export default class Point {
     this._editorComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevEditorComponent === null) {
-      render(this._pointContainer, this._pointComponent, RenderPosition.BEFOREEND);
+      render(this._pointContainer, this._pointComponent);
       return;
     }
 
